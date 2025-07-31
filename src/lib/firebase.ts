@@ -3,12 +3,12 @@ import { getAuth } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 
 const firebaseConfig = {
-  projectId: 'e-automate-182bc',
-  appId: '1:599608749375:web:ee17930a7024409e23f78a',
-  storageBucket: 'e-automate-182bc.firebasestorage.app',
-  apiKey: 'AIzaSyAcbsUXaKuHjuiQytlZex80KyAqWEE4jYQ',
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
   authDomain: 'e-automate-182bc.firebaseapp.com',
+  projectId: 'e-automate-182bc',
+  storageBucket: 'e-automate-182bc.appspot.com',
   messagingSenderId: '599608749375',
+  appId: '1:599608749375:web:ee17930a7024409e23f78a',
 };
 
 // Initialize Firebase
