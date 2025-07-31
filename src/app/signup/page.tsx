@@ -2,14 +2,18 @@
 'use client';
 
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { auth } from '@/lib/firebase';
+import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
+import { useToast } from '@/hooks/use-toast';
+
 
 const formSchema = z.object({
   firstName: z.string().min(1, 'First name is required'),
@@ -37,6 +41,8 @@ function GoogleIcon() {
 }
 
 export default function SignupPage() {
+  const router = useRouter();
+  const { toast } = useToast();
   const form = useForm<SignupFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -47,9 +53,25 @@ export default function SignupPage() {
     },
   });
 
-  function onSubmit(data: SignupFormValues) {
-    console.log(data);
-    // TODO: Implement actual signup logic
+  async function onSubmit(data: SignupFormValues) {
+    try {
+      const userCredential = await createUserWithEmailAndPassword(auth, data.email, data.password);
+      await updateProfile(userCredential.user, {
+        displayName: `${data.firstName} ${data.lastName}`,
+      });
+      toast({
+        title: 'Account created!',
+        description: 'You have been successfully signed up.',
+      });
+      router.push('/');
+    } catch (error: any) {
+      console.error('Signup Error:', error);
+       toast({
+        title: 'Signup Failed',
+        description: error.message || 'An unexpected error occurred.',
+        variant: 'destructive',
+      });
+    }
   }
 
   return (
@@ -116,8 +138,8 @@ export default function SignupPage() {
                   </FormItem>
                 )}
               />
-              <Button type="submit" className="w-full" data-testid="signup-button">
-                Create an account
+              <Button type="submit" className="w-full" data-testid="signup-button" disabled={form.formState.isSubmitting}>
+                {form.formState.isSubmitting ? 'Creating Account...' : 'Create an account'}
               </Button>
               <Button variant="outline" className="w-full" type="button">
                   <GoogleIcon/>
