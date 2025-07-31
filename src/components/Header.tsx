@@ -2,7 +2,6 @@
 
 import Link from 'next/link';
 import {
-  Package2,
   ShoppingCart,
   User,
   LogOut,
@@ -26,16 +25,45 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { useCart } from '@/hooks/use-cart';
 import { Logo } from './Logo';
+import { useAuth } from '@/hooks/use-auth';
+import { auth } from '@/lib/firebase';
+import { signOut } from 'firebase/auth';
+import { useRouter } from 'next/navigation';
+import { useToast } from '@/hooks/use-toast';
 
 export function Header() {
   const { cartCount } = useCart();
-  const isAuthenticated = false; // Mocked auth state
+  const { user, loading } = useAuth();
+  const router = useRouter();
+  const { toast } = useToast();
+
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      toast({
+        title: 'Logged Out',
+        description: 'You have been successfully logged out.',
+      });
+      router.push('/');
+    } catch (error) {
+      toast({
+        title: 'Logout Failed',
+        description: 'There was an error logging you out.',
+        variant: 'destructive',
+      });
+    }
+  };
+
 
   const navLinks = [
     { href: '/', label: 'Home' },
     { href: '/products', label: 'Products' },
-    { href: '/orders', label: 'My Orders' },
   ];
+  
+  if (user) {
+    navLinks.push({ href: '/orders', label: 'My Orders' });
+  }
+
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -81,9 +109,11 @@ export function Header() {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              {isAuthenticated ? (
+              {loading ? (
+                 <DropdownMenuItem disabled>Loading...</DropdownMenuItem>
+              ) : user ? (
                 <>
-                  <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                  <DropdownMenuLabel>{user.displayName || 'My Account'}</DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem asChild>
                     <Link href="/profile"><LayoutDashboard className="mr-2 h-4 w-4" />Profile</Link>
@@ -92,7 +122,7 @@ export function Header() {
                     <Link href="/orders"><ShoppingCart className="mr-2 h-4 w-4" />Orders</Link>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem>
+                  <DropdownMenuItem onClick={handleLogout} className="cursor-pointer">
                     <LogOut className="mr-2 h-4 w-4" />
                     Logout
                   </DropdownMenuItem>

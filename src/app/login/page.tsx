@@ -1,8 +1,26 @@
+
+'use client';
+
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import * as z from 'zod';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Label } from '@/components/ui/label';
+import { auth } from '@/lib/firebase';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { useToast } from '@/hooks/use-toast';
+
+const formSchema = z.object({
+  email: z.string().email('Invalid email address'),
+  password: z.string().min(1, 'Password is required'),
+});
+
+type LoginFormValues = z.infer<typeof formSchema>;
 
 function GoogleIcon() {
     return (
@@ -17,6 +35,34 @@ function GoogleIcon() {
 }
 
 export default function LoginPage() {
+  const router = useRouter();
+  const { toast } = useToast();
+  const form = useForm<LoginFormValues>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      email: '',
+      password: '',
+    },
+  });
+
+  async function onSubmit(data: LoginFormValues) {
+    try {
+      await signInWithEmailAndPassword(auth, data.email, data.password);
+      toast({
+        title: 'Logged In',
+        description: 'You have been successfully logged in.',
+      });
+      router.push('/');
+    } catch (error: any) {
+      console.error('Login Error:', error);
+      toast({
+        title: 'Login Failed',
+        description: error.message || 'An unexpected error occurred.',
+        variant: 'destructive',
+      });
+    }
+  }
+
   return (
     <div className="flex items-center justify-center min-h-[calc(100vh-8rem)] bg-secondary/50 py-12 px-4">
       <Card className="mx-auto max-w-sm w-full">
@@ -25,28 +71,48 @@ export default function LoginPage() {
           <CardDescription>Enter your email below to login to your account</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid gap-4">
-            <div className="grid gap-2">
-              <Label htmlFor="email">Email</Label>
-              <Input id="email" type="email" placeholder="m@example.com" required data-testid="email-input"/>
-            </div>
-            <div className="grid gap-2">
-              <div className="flex items-center">
-                <Label htmlFor="password">Password</Label>
-                <Link href="#" className="ml-auto inline-block text-sm underline">
-                  Forgot your password?
-                </Link>
-              </div>
-              <Input id="password" type="password" required data-testid="password-input" />
-            </div>
-            <Button type="submit" className="w-full" data-testid="login-button">
-              Login
-            </Button>
-            <Button variant="outline" className="w-full">
-                <GoogleIcon/>
-                Login with Google
-            </Button>
-          </div>
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4">
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Email</FormLabel>
+                    <FormControl>
+                      <Input type="email" placeholder="m@example.com" data-testid="email-input" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <div className="flex items-center">
+                      <FormLabel>Password</FormLabel>
+                      <Link href="#" className="ml-auto inline-block text-sm underline">
+                        Forgot your password?
+                      </Link>
+                    </div>
+                    <FormControl>
+                      <Input type="password" data-testid="password-input" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <Button type="submit" className="w-full" data-testid="login-button" disabled={form.formState.isSubmitting}>
+                {form.formState.isSubmitting ? 'Logging in...' : 'Login'}
+              </Button>
+            </form>
+          </Form>
+          <Button variant="outline" className="w-full mt-4">
+            <GoogleIcon/>
+            Login with Google
+          </Button>
           <div className="mt-4 text-center text-sm">
             Don&apos;t have an account?{' '}
             <Link href="/signup" className="underline">
