@@ -1,10 +1,43 @@
+'use client';
+
+import { useAuth } from '@/hooks/use-auth';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Separator } from '@/components/ui/separator';
+import { Skeleton } from '@/components/ui/skeleton';
+import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
+
 
 export default function ProfilePage() {
+  const { user, loading } = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!loading && !user) {
+      router.push('/login');
+    }
+  }, [user, loading, router]);
+  
+  if (loading || !user) {
+    return (
+      <div className="container mx-auto px-4 py-8">
+        <div className="grid gap-8 md:grid-cols-3">
+            <div className="md:col-span-2 space-y-4">
+                <Skeleton className="h-40 w-full" />
+                <Skeleton className="h-20 w-full" />
+            </div>
+             <div className="md:col-span-1 space-y-4">
+                <Skeleton className="h-64 w-full" />
+            </div>
+        </div>
+      </div>
+    )
+  }
+
+  const [firstName, lastName] = user.displayName?.split(' ') || ['', ''];
+
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold tracking-tight mb-8 font-headline">My Profile</h1>
@@ -19,16 +52,16 @@ export default function ProfilePage() {
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div className="grid gap-2">
                             <Label htmlFor="first-name">First Name</Label>
-                            <Input id="first-name" defaultValue="John" />
+                            <Input id="first-name" defaultValue={firstName} />
                         </div>
                         <div className="grid gap-2">
                             <Label htmlFor="last-name">Last Name</Label>
-                            <Input id="last-name" defaultValue="Doe" />
+                            <Input id="last-name" defaultValue={lastName} />
                         </div>
                     </div>
                     <div className="grid gap-2">
                         <Label htmlFor="email">Email</Label>
-                        <Input id="email" type="email" defaultValue="john.doe@example.com" />
+                        <Input id="email" type="email" defaultValue={user.email || ''} readOnly />
                     </div>
                     <Button>Save Changes</Button>
                 </CardContent>

@@ -1,7 +1,12 @@
 "use client";
 
 import { CartProvider } from './CartProvider';
+import { AuthProvider } from './AuthProvider';
 
 export function Providers({ children }: { children: React.ReactNode }) {
-  return <CartProvider>{children}</CartProvider>;
+  return (
+    <AuthProvider>
+        <CartProvider>{children}</CartProvider>
+    </AuthProvider>
+  );
 }
