@@ -1,6 +1,6 @@
-# E-Automate
+# E-Automate-SafSaba
 
-This is a Next.js application for an e-commerce platform called E-Automate. It uses Firebase for the backend and Genkit for AI-powered features.
+This is a Next.js application for an e-commerce platform called E-Automate-SafSaba. It uses Firebase for the backend and Genkit for AI-powered features.
 
 ## Core Features:
 

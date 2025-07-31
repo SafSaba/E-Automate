@@ -10,7 +10,7 @@ import { Toaster } from "@/components/ui/toaster";
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 
 export const metadata: Metadata = {
-  title: 'E-Automate - E-commerce Test Platform',
+  title: 'E-Automate-SafSaba - E-commerce Test Platform',
   description: 'A fully functional e-commerce web application for comprehensive automation testing.',
 };
 

@@ -22,7 +22,7 @@ export default function Home() {
               The Future of Automated E-Commerce Testing
             </h1>
             <p className="text-lg md:text-xl text-muted-foreground">
-              Welcome to E-Automate, your dedicated platform for robust and dynamic UI, API, and database testing. Explore our catalog and experience a seamless shopping flow.
+              Welcome to E-Automate-SafSaba, your dedicated platform for robust and dynamic UI, API, and database testing. Explore our catalog and experience a seamless shopping flow.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
               <Button asChild size="lg" className="font-semibold">
