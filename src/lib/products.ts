@@ -18,7 +18,7 @@ const products: Product[] = [
     description:
       'Experience the future on your wrist. This smartwatch boasts a lightweight titanium frame, a vibrant AMOLED display, and a suite of health and fitness tracking features. Syncs seamlessly with your smartphone for notifications, calls, and music control. Long-lasting battery life.',
     price: 799.99,
-    images: ['https://images.unsplash.com/photo-1579586337278-35f4b7ebd39e?q=80&w=2835&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', 'https://placehold.co/600x600.png'],
+    images: ['https://images.unsplash.com/photo-1544117519-31a4b719223d?q=80&w=2848&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', 'https://placehold.co/600x600.png'],
     category: 'Watches',
     stock: 25,
     dataAiHint: 'smart watch'
