@@ -14,7 +14,7 @@ import {
   CarouselItem,
 } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
-import * a as React from "react";
+import * as React from "react";
 
 export default function Home() {
   const featuredProducts = getProducts().slice(0, 4);
