@@ -22,7 +22,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     try {
-      const savedCart = localStorage.getItem('e_automate_cart');
+      const savedCart = localStorage.getItem('e_automate_safsaba_cart');
       if (savedCart) {
         setCartItems(JSON.parse(savedCart));
       }
@@ -32,7 +32,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   useEffect(() => {
-    localStorage.setItem('e_automate_cart', JSON.stringify(cartItems));
+    localStorage.setItem('e_automate_safsaba_cart', JSON.stringify(cartItems));
   }, [cartItems]);
 
   const addToCart = useCallback((product: Product, quantity: number) => {
