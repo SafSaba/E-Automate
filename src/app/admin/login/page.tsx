@@ -1,5 +1,7 @@
+'use client';
+
 import React, { useState } from 'react';
-import { useRouter } from 'next/router'; // Assuming you are using next/router for navigation
+import { useRouter } from 'next/navigation';
 
 const AdminLoginPage = () => {
   const [email, setEmail] = useState('');
