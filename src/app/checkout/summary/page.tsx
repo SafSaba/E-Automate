@@ -1,28 +1,80 @@
+'use client';
+
+import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
+import { useCart } from '@/hooks/use-cart';
+import { useAuth } from '@/hooks/use-auth';
+import { useRouter } from 'next/navigation';
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { db } from '@/lib/firebase';
+import { useToast } from '@/hooks/use-toast';
+import { Loader2 } from 'lucide-react';
+import { useCheckout } from '@/hooks/use-checkout';
 
-// Mock data for summary page
-const mockCart = {
-  items: [
-    {
-      product: { id: 'prod_001', name: 'Chronograph Excellence', price: 450.00, images: ['https://placehold.co/600x600.png'], dataAiHint: 'luxury watch' },
-      quantity: 1,
-    },
-    {
-      product: { id: 'prod_003', name: 'Ultra-Slim Laptop', price: 1399.00, images: ['https://placehold.co/600x600.png'], dataAiHint: 'modern laptop' },
-      quantity: 1,
-    }
-  ],
-  total: 1849.00
-};
-const mockShipping = { name: 'John Doe', address: '123 Main St, Apt 4B', city: 'New York, NY 10001', country: 'United States' };
-const mockPayment = { method: 'Visa', last4: '4242' };
 
 export default function SummaryPage() {
-  const { items, total } = mockCart;
+  const { cart, cartTotal } = useCart();
+  const { shippingAddress, paymentDetails } = useCheckout();
+  const { user } = useAuth();
+  const router = useRouter();
+  const { toast } = useToast();
+  const [isProcessing, setIsProcessing] = useState(false);
+
+  const processOrder = async () => {
+    setIsProcessing(true);
+    if (!user || !shippingAddress) {
+      toast({
+        title: "Error",
+        description: "You must be logged in and have a shipping address to place an order.",
+        variant: "destructive",
+      });
+      setIsProcessing(false);
+      return;
+    }
+
+    try {
+      // 1. Create a new order object
+      const newOrder = {
+        userId: user.uid,
+        items: cart,
+        total: cartTotal,
+        shippingAddress,
+        paymentDetails: {
+          method: 'Card', // This could be dynamic in a real app
+          last4: paymentDetails?.last4 || '****'
+        },
+        status: 'Processing',
+        createdAt: serverTimestamp(),
+      };
+
+      // 2. Save the order to Firestore
+      const orderRef = await addDoc(collection(db, 'orders'), newOrder);
+
+      // 3. Clear the cart (implement this in your useCart hook)
+      // clearCart(); 
+
+      // 4. Redirect to order confirmation page
+      toast({
+        title: "Order Placed!",
+        description: "Your order has been successfully placed.",
+      });
+      router.push(`/order-confirmation/${orderRef.id}`);
+
+    } catch (error) {
+      console.error("Error placing order: ", error);
+      toast({
+        title: "Order Failed",
+        description: "There was an error placing your order. Please try again.",
+        variant: "destructive",
+      });
+      setIsProcessing(false);
+    }
+  };
+
 
   return (
     <div className="mx-auto max-w-4xl">
@@ -37,10 +89,9 @@ export default function SummaryPage() {
               <Button variant="outline" size="sm" asChild><Link href="/checkout">Edit</Link></Button>
             </CardHeader>
             <CardContent className="text-sm text-muted-foreground">
-              <p>{mockShipping.name}</p>
-              <p>{mockShipping.address}</p>
-              <p>{mockShipping.city}</p>
-              <p>{mockShipping.country}</p>
+              <p>{shippingAddress?.name}</p>
+              <p>{shippingAddress?.line1} {shippingAddress?.line2}</p>
+              <p>{shippingAddress?.city}, {shippingAddress?.state} {shippingAddress?.postal_code}</p>
             </CardContent>
           </Card>
           <Card>
@@ -52,7 +103,7 @@ export default function SummaryPage() {
               <Button variant="outline" size="sm" asChild><Link href="/checkout/payment">Edit</Link></Button>
             </CardHeader>
             <CardContent className="text-sm text-muted-foreground">
-              <p>Card ending in {mockPayment.last4}</p>
+               <p>Card ending in {paymentDetails?.last4 || '****'}</p>
             </CardContent>
           </Card>
         </div>
@@ -64,9 +115,9 @@ export default function SummaryPage() {
                 </CardHeader>
                 <CardContent>
                     <div className="space-y-4">
-                        {items.map(({ product, quantity }) => (
+                        {cart.map(({ product, quantity }) => (
                             <div key={product.id} className="flex items-center gap-4">
-                                <Image src={product.images[0]} alt={product.name} width={64} height={64} className="rounded-md" data-ai-hint={product.dataAiHint}/>
+                                <Image src={product.images[0]} alt={product.name} width={64} height={64} className="rounded-md"/>
                                 <div className="flex-grow">
                                     <p className="font-medium">{product.name}</p>
                                     <p className="text-sm text-muted-foreground">Qty: {quantity}</p>
@@ -79,26 +130,22 @@ export default function SummaryPage() {
                     <div className="space-y-2 text-sm">
                         <div className="flex justify-between">
                             <span className="text-muted-foreground">Subtotal</span>
-                            <span>${total.toFixed(2)}</span>
+                            <span>${cartTotal.toFixed(2)}</span>
                         </div>
                         <div className="flex justify-between">
                             <span className="text-muted-foreground">Shipping</span>
                             <span>$0.00</span>
                         </div>
-                         <div className="flex justify-between">
-                            <span className="text-muted-foreground">Taxes</span>
-                            <span>Calculated at next step</span>
-                        </div>
                     </div>
                     <Separator className="my-4"/>
                     <div className="flex justify-between font-bold text-lg">
                         <span>Total</span>
-                        <span>${total.toFixed(2)}</span>
+                        <span>${cartTotal.toFixed(2)}</span>
                     </div>
                 </CardContent>
                 <CardFooter>
-                    <Button asChild size="lg" className="w-full">
-                        <Link href="/order-confirmation/order_12345">Place Order</Link>
+                    <Button onClick={processOrder} disabled={isProcessing} size="lg" className="w-full">
+                       {isProcessing ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : 'Place Order'}
                     </Button>
                 </CardFooter>
             </Card>

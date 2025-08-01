@@ -1,9 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
-import { getProductById } from '@/lib/products';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { QuantitySelector } from '@/components/QuantitySelector';
@@ -18,12 +17,60 @@ import {
 } from "@/components/ui/carousel";
 import { Card, CardContent } from "@/components/ui/card";
 import { SuggestedProducts } from '@/components/SuggestedProducts';
-import { CheckCircle, Shield, Truck } from 'lucide-react';
+import { CheckCircle, Shield, Truck, Loader2 } from 'lucide-react';
+import { doc, getDoc } from 'firebase/firestore';
+import { db } from '@/lib/firebase';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export default function ProductDetailPage({ params }: { params: { productId: string } }) {
   const [quantity, setQuantity] = useState(1);
-  const product = getProductById(params.productId);
+  const [product, setProduct] = useState<Product | null>(null);
+  const [loading, setLoading] = useState(true);
   const { addToCart } = useCart();
+
+  useEffect(() => {
+    const fetchProduct = async () => {
+      setLoading(true);
+      try {
+        const productRef = doc(db, 'products', params.productId);
+        const productSnap = await getDoc(productRef);
+        if (productSnap.exists()) {
+          setProduct({ id: productSnap.id, ...productSnap.data() } as Product);
+        } else {
+          setProduct(null);
+        }
+      } catch (error) {
+        console.error("Error fetching product:", error);
+        setProduct(null);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchProduct();
+  }, [params.productId]);
+
+  if (loading) {
+    return (
+       <div className="container mx-auto px-4 py-8 md:py-12">
+          <div className="grid md:grid-cols-2 gap-8 lg:gap-16">
+              <div>
+                  <Skeleton className="w-full aspect-square" />
+              </div>
+              <div className="space-y-4">
+                  <Skeleton className="h-6 w-1/4" />
+                  <Skeleton className="h-12 w-3/4" />
+                  <Skeleton className="h-8 w-1/2" />
+                  <Skeleton className="h-24 w-full" />
+                  <Separator />
+                  <div className="flex gap-4">
+                     <Skeleton className="h-12 w-24" />
+                     <Skeleton className="h-12 w-48" />
+                  </div>
+              </div>
+          </div>
+      </div>
+    );
+  }
 
   if (!product) {
     notFound();
@@ -57,7 +104,6 @@ export default function ProductDetailPage({ params }: { params: { productId: str
                             height={600}
                             className="object-cover w-full h-full"
                             priority={index === 0}
-                            data-ai-hint={product.dataAiHint}
                         />
                         </CardContent>
                     </Card>
