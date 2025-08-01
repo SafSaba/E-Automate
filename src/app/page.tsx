@@ -80,13 +80,13 @@ export default function AboutPage() {
                 </CardHeader>
                 <CardContent className="space-y-4 text-muted-foreground">
                   <p>
-                    My journey in technology began with a Bachelor's Degree in Software Engineering and Automated Systems, which provided a strong foundation for building and analyzing complex products. Early in my career, that foundation was put to the test when I discovered and reported a significant security flaw in <Link href="https://news.softpedia.com/news/Major-iOS-5-Security-Flaw-Discovered-254204.shtml" target="_blank" className="text-primary hover:underline">iOS 5.0.1</Link>. That experience cemented my passion for ensuring system integrity from the deepest architectural levels.
+                    My journey in technology began with a Bachelor&apos;s Degree in Software Engineering and Automated Systems, which provided a strong foundation for building and analyzing complex products. Early in my career, that foundation was put to the test when I discovered and reported a significant security flaw in <Link href="https://news.softpedia.com/news/Major-iOS-5-Security-Flaw-Discovered-254204.shtml" target="_blank" className="text-primary hover:underline">iOS 5.0.1</Link>. That experience cemented my passion for ensuring system integrity from the deepest architectural levels.
                   </p>
                   <p>
-                    I've always been driven by the challenge of solving complex problems and a core passion for building intelligent, high-quality systems from the ground up. My decade-long career as a Software Quality Engineer (SDET) provided me with a unique vantage point—a deep, architectural understanding of how disparate components must integrate flawlessly to create a robust and reliable product. I learned to see the entire system, identify gaps others might miss, and ensure quality at every stage.
+                    I&apos;ve always been driven by the challenge of solving complex problems and a core passion for building intelligent, high-quality systems from the ground up. My decade-long career as a Software Quality Engineer (SDET) provided me with a unique vantage point—a deep, architectural understanding of how disparate components must integrate flawlessly to create a robust and reliable product. I learned to see the entire system, identify gaps others might miss, and ensure quality at every stage.
                   </p>
                    <p>
-                    Now, I am channeling that same systems-thinking approach into the field of Machine Learning. I am actively deepening my expertise by studying for the AWS Certified AI - Foundation exam and building hands-on classification projects on GitHub "SafSaba'. This practical work is complemented by comprehensive training covering the full machine learning lifecycle—from advanced algorithms and Natural Language Processing (NLP) to MLOps principles and model deployment.
+                    Now, I am channeling that same systems-thinking approach into the field of Machine Learning. I am actively deepening my expertise by studying for the AWS Certified AI - Foundation exam and building hands-on classification projects on GitHub "SafSaba". This practical work is complemented by comprehensive training covering the full machine learning lifecycle—from advanced algorithms and Natural Language Processing (NLP) to MLOps principles and model deployment.
                   </p>
                    <p>
                     I am seeking a Machine Learning Engineer role where I can apply my unique blend of architectural insight, automation experience, and new ML capabilities. I am eager to contribute to a team that values a quality-first approach to building the next generation of AI solutions.
@@ -121,7 +121,7 @@ export default function AboutPage() {
               <Card>
                 <CardHeader>
                   <CardTitle>My Projects</CardTitle>
-                  <CardDescription>Here are a few projects I'm proud of. You can find more on my GitHub.</CardDescription>
+                  <CardDescription>Here are a few projects I&apos;m proud of. You can find more on my GitHub.</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-6">
                   {projects.map((project) => (
