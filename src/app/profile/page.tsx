@@ -61,7 +61,7 @@ export default function ProfilePage() {
                     </div>
                     <div className="grid gap-2">
                         <Label htmlFor="email">Email</Label>
-                        <Input id="email" type="email" defaultValue={user.email || ''} readOnly />
+                        <Input id="email" type="email" defaultValue={user?.email || ''} readOnly />
                     </div>
                     <Button>Save Changes</Button>
                 </CardContent>
