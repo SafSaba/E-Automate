@@ -1,11 +1,13 @@
+'use client';
 
-import Image from 'next/image';
 import Link from 'next/link';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Github, Linkedin, Mail } from 'lucide-react';
+import { useAuth } from '@/hooks/use-auth';
+import { Skeleton } from '@/components/ui/skeleton';
 
 const projects = [
   {
@@ -38,35 +40,63 @@ const skills = [
     'Jira', 'ADO', 'Apache POI', 'JSON', 'Windows', 'Linux'
 ];
 
-export default function AboutPage() {
+function ProfileCardSkeleton() {
+    return (
+        <Card className="sticky top-20 text-center">
+            <CardContent className="p-6">
+                <Skeleton className="w-32 h-32 rounded-full mx-auto mb-4 border-4 border-primary/50" />
+                <Skeleton className="h-8 w-40 mx-auto mb-2" />
+                <Skeleton className="h-4 w-full mb-1" />
+                <Skeleton className="h-4 w-full mb-1" />
+                <Skeleton className="h-4 w-3/4 mx-auto" />
+                <div className="flex justify-center gap-4 mt-6">
+                   <Skeleton className="h-10 w-10 rounded-md" />
+                   <Skeleton className="h-10 w-10 rounded-md" />
+                   <Skeleton className="h-10 w-10 rounded-md" />
+                </div>
+            </CardContent>
+        </Card>
+    )
+}
+
+
+export default function HomePage() {
+  const { user, loading } = useAuth();
+  const fallbackText = user?.displayName?.split(' ').map(n => n[0]).join('') || 'U';
+
+
   return (
     <div className="bg-secondary/50">
       <div className="container mx-auto px-4 py-12 md:py-20">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           
           <div className="lg:col-span-1">
-            <Card className="sticky top-20 text-center">
-              <CardContent className="p-6">
-                <Avatar className="w-32 h-32 mx-auto mb-4 border-4 border-primary/50">
-                  <AvatarImage src="/safwan-saba.png" alt="Safwan Saba" data-ai-hint="professional headshot" className="object-cover" />
-                  <AvatarFallback>SS</AvatarFallback>
-                </Avatar>
-                <h1 className="text-3xl font-bold font-headline">Safwan Saba</h1>
-                <p className="text-muted-foreground mt-1 text-sm">Senior Software Engineer in Test & Aspiring Machine Learning Engineer | Actively developing skills in Python, MLOps, Leveraging a Decade in Systems Architecture and Cloud</p>
-                
-                <div className="flex justify-center gap-4 mt-6">
-                   <Button asChild variant="outline" size="icon">
-                       <Link href="https://github.com/SafSaba" target="_blank"><Github className="h-5 w-5"/></Link>
-                   </Button>
-                   <Button asChild variant="outline" size="icon">
-                       <Link href="https://www.linkedin.com/in/safwansaba/" target="_blank"><Linkedin className="h-5 w-5"/></Link>
-                   </Button>
-                   <Button asChild variant="outline" size="icon">
-                       <Link href="mailto:isafwan@outlook.com"><Mail className="h-5 w-5"/></Link>
-                   </Button>
-                </div>
-              </CardContent>
-            </Card>
+            {loading ? (
+                <ProfileCardSkeleton />
+            ) : (
+                <Card className="sticky top-20 text-center">
+                <CardContent className="p-6">
+                    <Avatar className="w-32 h-32 mx-auto mb-4 border-4 border-primary/50">
+                    <AvatarImage src={user?.photoURL || undefined} alt="User avatar" className="object-cover" />
+                    <AvatarFallback>{fallbackText}</AvatarFallback>
+                    </Avatar>
+                    <h1 className="text-3xl font-bold font-headline">{user?.displayName || 'Safwan Saba'}</h1>
+                    <p className="text-muted-foreground mt-1 text-sm">Senior Software Engineer in Test & Aspiring Machine Learning Engineer | Actively developing skills in Python, MLOps, Leveraging a Decade in Systems Architecture and Cloud</p>
+                    
+                    <div className="flex justify-center gap-4 mt-6">
+                    <Button asChild variant="outline" size="icon">
+                        <Link href="https://github.com/SafSaba" target="_blank"><Github className="h-5 w-5"/></Link>
+                    </Button>
+                    <Button asChild variant="outline" size="icon">
+                        <Link href="https://www.linkedin.com/in/safwansaba/" target="_blank"><Linkedin className="h-5 w-5"/></Link>
+                    </Button>
+                    <Button asChild variant="outline" size="icon">
+                        <Link href="mailto:isafwan@outlook.com"><Mail className="h-5 w-5"/></Link>
+                    </Button>
+                    </div>
+                </CardContent>
+                </Card>
+            )}
           </div>
 
           <div className="lg:col-span-2 space-y-8">

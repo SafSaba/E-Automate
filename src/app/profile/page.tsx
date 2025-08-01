@@ -7,18 +7,70 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
-
+import { useEffect, useRef, useState } from 'react';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { getAuth } from 'firebase/auth';
 
 export default function ProfilePage() {
   const { user, loading } = useAuth();
   const router = useRouter();
+  const [avatarFile, setAvatarFile] = useState<File | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (!loading && !user) {
       router.push('/login');
     }
   }, [user, loading, router]);
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files[0]) {
+        setAvatarFile(event.target.files[0]);
+        handleUpload(event.target.files[0]);
+    }
+  };
+
+  const handleUploadClick = () => {
+      fileInputRef.current?.click();
+  }
+
+  const handleUpload = async (file: File) => {
+    if (!file) return;
+
+    const auth = getAuth();
+    const idToken = await auth.currentUser?.getIdToken();
+
+    if (!idToken) {
+        console.error("Could not get ID token.");
+        return;
+    }
+
+    const formData = new FormData();
+    formData.append('avatar', file);
+
+    try {
+      const response = await fetch('/api/profile/avatar', {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${idToken}`,
+        },
+        body: formData,
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        // You might want to update the user context or state with the new photoURL
+        console.log('Upload successful:', data);
+        // Force a reload of the user to get the new photoURL
+        await auth.currentUser?.reload();
+        // This will trigger a re-render with the new avatar via the useAuth hook
+      } else {
+        console.error('Upload failed:', await response.text());
+      }
+    } catch (error) {
+      console.error('Error uploading file:', error);
+    }
+  };
   
   if (loading || !user) {
     return (
@@ -37,6 +89,7 @@ export default function ProfilePage() {
   }
 
   const [firstName, lastName] = user.displayName?.split(' ') || ['', ''];
+  const fallbackText = (user.displayName || '').split(' ').map(n => n[0]).join('') || 'U';
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -67,7 +120,27 @@ export default function ProfilePage() {
                 </CardContent>
             </Card>
         </div>
-        <div className="md:col-span-1">
+        <div className="md:col-span-1 space-y-8">
+             <Card>
+                <CardHeader>
+                    <CardTitle>Profile Picture</CardTitle>
+                    <CardDescription>Upload a new profile picture.</CardDescription>
+                </CardHeader>
+                <CardContent className="flex items-center gap-4">
+                    <Avatar className="h-20 w-20">
+                        <AvatarImage src={user.photoURL || undefined} alt="User avatar" />
+                        <AvatarFallback>{fallbackText}</AvatarFallback>
+                    </Avatar>
+                    <input 
+                        type="file"
+                        ref={fileInputRef}
+                        onChange={handleFileChange}
+                        className="hidden"
+                        accept="image/*"
+                    />
+                    <Button variant="outline" onClick={handleUploadClick}>Upload Picture</Button>
+                </CardContent>
+            </Card>
              <Card>
                 <CardHeader>
                 <CardTitle>Shipping Address</CardTitle>
