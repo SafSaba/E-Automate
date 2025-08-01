@@ -9,7 +9,7 @@ import { Github, Linkedin, Mail } from 'lucide-react';
 
 const projects = [
   {
-    name: 'E-Automate-SafSaba',
+    name: 'E-Automate',
     description: 'A fully functional e-commerce web application built with Next.js, Firebase, and Genkit for comprehensive automation testing and AI-powered features.',
     tags: ['Next.js', 'TypeScript', 'Firebase', 'Tailwind CSS', 'Genkit'],
     href: 'https://github.com/SafSaba/E-Automate-SafSaba',
