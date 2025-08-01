@@ -10,8 +10,8 @@ import { Toaster } from "@/components/ui/toaster";
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 
 export const metadata: Metadata = {
-  title: 'E-Automate-SafSaba - E-commerce Test Platform',
-  description: 'A fully functional e-commerce web application for comprehensive automation testing.',
+  title: 'Safwan Saba - Portfolio',
+  description: 'A personal portfolio and fully functional e-commerce web application for comprehensive automation testing.',
 };
 
 export default function RootLayout({

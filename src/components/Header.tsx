@@ -54,16 +54,21 @@ export function Header() {
     }
   };
 
+  const handleScroll = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
+    e.preventDefault();
+    const href = e.currentTarget.href;
+    const targetId = href.replace(/.*\#/, "");
+    const elem = document.getElementById(targetId);
+    elem?.scrollIntoView({
+      behavior: 'smooth',
+    });
+  };
 
   const navLinks = [
-    { href: '/', label: 'Home' },
-    { href: '/products', label: 'Products' },
+    { href: '/', label: 'About Me' },
+    { href: '/products', label: 'E-Automate' },
+    { href: '#projects', label: 'Project', action: handleScroll },
   ];
-  
-  if (user) {
-    navLinks.push({ href: '/orders', label: 'My Orders' });
-  }
-
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -77,6 +82,7 @@ export function Header() {
               <Link
                 key={link.href}
                 href={link.href}
+                onClick={link.action}
                 className="text-muted-foreground transition-colors hover:text-foreground"
               >
                 {link.label}
@@ -118,9 +124,6 @@ export function Header() {
                   <DropdownMenuItem asChild>
                     <Link href="/profile"><LayoutDashboard className="mr-2 h-4 w-4" />Profile</Link>
                   </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <Link href="/orders"><ShoppingCart className="mr-2 h-4 w-4" />Orders</Link>
-                  </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={handleLogout} className="cursor-pointer">
                     <LogOut className="mr-2 h-4 w-4" />
@@ -153,7 +156,7 @@ export function Header() {
                     <Logo />
                  </Link>
                  {navLinks.map(link => (
-                    <Link key={link.href} href={link.href} className="hover:text-foreground text-muted-foreground">
+                    <Link key={link.href} href={link.href} onClick={link.action} className="hover:text-foreground text-muted-foreground">
                         {link.label}
                     </Link>
                  ))}
