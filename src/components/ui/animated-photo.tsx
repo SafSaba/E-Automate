@@ -23,8 +23,8 @@ const AnimatedPhoto = () => {
       <Image
         src="/image/safwan-profile.jpg"
         alt="Safwan Saba"
-        layout="fill"
-        objectFit="cover"
+        fill
+        style={{ objectFit: "cover" }}
         className="rounded-full"
       />
     </motion.div>
