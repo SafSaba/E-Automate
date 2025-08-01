@@ -12,26 +12,24 @@ const projects = [
     name: 'E-Automate-SafSaba',
     description: 'A fully functional e-commerce web application built with Next.js, Firebase, and Genkit for comprehensive automation testing and AI-powered features.',
     tags: ['Next.js', 'TypeScript', 'Firebase', 'Tailwind CSS', 'Genkit'],
-    href: 'https://github.com/your-username/e-automate-safsaba',
+    href: 'https://github.com/SafSaba/E-Automate-SafSaba',
   },
   {
-    name: 'Project Two',
-    description: 'A brief and engaging description of another one of your standout projects. Highlight the key technologies and what you learned.',
-    tags: ['React', 'Node.js', 'GraphQL', 'MongoDB'],
-    href: 'https://github.com/your-username/project-two',
-  },
-  {
-    name: 'Project Three',
-    description: 'Describe your third project here. Focus on the problem it solves and the impact it had. Keep it concise and compelling for recruiters.',
-    tags: ['Python', 'Django', 'PostgreSQL', 'Docker'],
-    href: 'https://github.com/your-username/project-three',
+    name: 'Machine Learning Projects',
+    description: 'A collection of hands-on classification projects demonstrating practical ML skills and concepts.',
+    tags: ['Python', 'Scikit-learn', 'Pandas', 'Matplotlib'],
+    href: 'https://github.com/SafSaba',
   },
 ];
 
 const skills = [
-  'TypeScript', 'React', 'Next.js', 'Node.js', 'Python',
-  'Firebase', 'Google Cloud', 'Genkit', 'Tailwind CSS',
-  'Git & GitHub', 'CI/CD', 'Agile Methodologies'
+    'Selenium WebDriver', 'REST Assured', 'Postman', 'Swagger', 'Playwright', 'TestNG', 'JUnit', 'Appium',
+    'Java', 'Python', 'TypeScript', 'SQL',
+    'Jenkins', 'Azure DevOps', 'Git', 'Docker',
+    'MySQL', 'Oracle', 'SQL Server', 'JDBC', 'Informatica PowerCenter',
+    'BDD (Cucumber, SpecFlow)', 'POM', 'Hybrid', 'DDT', 'TDD',
+    'Splunk', 'Grafana', 'Azure App Insights',
+    'Jira', 'ADO', 'Apache POI', 'JSON', 'Windows', 'Linux'
 ];
 
 export default function AboutPage() {
@@ -44,22 +42,21 @@ export default function AboutPage() {
             <Card className="sticky top-20 text-center">
               <CardContent className="p-6">
                 <Avatar className="w-32 h-32 mx-auto mb-4 border-4 border-primary/50">
-                  {/* Replace with your actual image URL */}
                   <AvatarImage src="https://placehold.co/200x200.png" alt="Safwan Saba" data-ai-hint="professional headshot" />
                   <AvatarFallback>SS</AvatarFallback>
                 </Avatar>
                 <h1 className="text-3xl font-bold font-headline">Safwan Saba</h1>
-                <p className="text-muted-foreground mt-1">[Your Title, e.g., Senior Software Engineer]</p>
+                <p className="text-muted-foreground mt-1 text-sm">Senior Software Engineer in Test & Aspiring Machine Learning Engineer | Actively developing skills in Python, MLOps, Leveraging a Decade in Systems Architecture and Cloud</p>
                 
                 <div className="flex justify-center gap-4 mt-6">
                    <Button asChild variant="outline" size="icon">
-                       <Link href="https://github.com/your-username" target="_blank"><Github className="h-5 w-5"/></Link>
+                       <Link href="https://github.com/SafSaba" target="_blank"><Github className="h-5 w-5"/></Link>
                    </Button>
                    <Button asChild variant="outline" size="icon">
-                       <Link href="https://linkedin.com/in/safwansaba" target="_blank"><Linkedin className="h-5 w-5"/></Link>
+                       <Link href="https://www.linkedin.com/in/safwansaba/" target="_blank"><Linkedin className="h-5 w-5"/></Link>
                    </Button>
                    <Button asChild variant="outline" size="icon">
-                       <Link href="mailto:your-email@example.com"><Mail className="h-5 w-5"/></Link>
+                       <Link href="mailto:isafwan@outlook.com"><Mail className="h-5 w-5"/></Link>
                    </Button>
                 </div>
               </CardContent>
@@ -73,13 +70,16 @@ export default function AboutPage() {
               </CardHeader>
               <CardContent className="space-y-4 text-muted-foreground">
                 <p>
-                  Hello! I'm Safwan Saba, a passionate and results-driven software engineer with a knack for building innovative and efficient solutions. My journey in technology has been driven by a deep curiosity and a desire to solve complex problems.
+                  My journey in technology began with a Bachelor's Degree in Software Engineering and Automated Systems, which provided a strong foundation for building and analyzing complex products. Early in my career, that foundation was put to the test when I discovered and reported a significant security flaw in iOS 5.0.1. That experience cemented my passion for ensuring system integrity from the deepest architectural levels.
                 </p>
                 <p>
-                  Here, you can write a compelling paragraph about your professional background. Mention your years of experience, key areas of expertise (e.g., front-end, back-end, AI), and the types of companies or projects you've worked on.
+                  I've always been driven by the challenge of solving complex problems and a core passion for building intelligent, high-quality systems from the ground up. My decade-long career as a Software Quality Engineer (SDET) provided me with a unique vantage point—a deep, architectural understanding of how disparate components must integrate flawlessly to create a robust and reliable product. I learned to see the entire system, identify gaps others might miss, and ensure quality at every stage.
                 </p>
                  <p>
-                  This is a great place to add a bit about your personal interests or what motivates you. It helps recruiters see the person behind the code! For example: "When I'm not coding, I enjoy [Your Hobby 1] and [Your Hobby 2]."
+                  Now, I am channeling that same systems-thinking approach into the field of Machine Learning. I am actively deepening my expertise by studying for the AWS Certified AI - Foundation exam and building hands-on classification projects on GitHub "SafSaba'. This practical work is complemented by comprehensive training covering the full machine learning lifecycle—from advanced algorithms and Natural Language Processing (NLP) to MLOps principles and model deployment.
+                </p>
+                 <p>
+                  I am seeking a Machine Learning Engineer role where I can apply my unique blend of architectural insight, automation experience, and new ML capabilities. I am eager to contribute to a team that values a quality-first approach to building the next generation of AI solutions.
                 </p>
               </CardContent>
             </Card>
