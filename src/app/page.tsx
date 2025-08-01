@@ -1,133 +1,135 @@
 
-'use client';
-
-import Link from 'next/link';
 import Image from 'next/image';
+import Link from 'next/link';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { ProductCard } from '@/components/ProductCard';
-import { getProducts } from '@/lib/products';
-import { ArrowRight, ShoppingBag, Watch, Laptop, Smartphone } from 'lucide-react';
-import { Card, CardContent } from "@/components/ui/card";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-} from "@/components/ui/carousel";
-import Autoplay from "embla-carousel-autoplay";
-import * as React from "react";
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Github, Linkedin, Mail } from 'lucide-react';
 
-export default function Home() {
-  const featuredProducts = getProducts().slice(0, 4);
-  const carouselProducts = getProducts().slice(0, 5);
-  const categories = [
-    { name: 'Watches', icon: Watch, href: '/products?category=Watches' },
-    { name: 'Laptops', icon: Laptop, href: '/products?category=Laptops' },
-    { name: 'Smartphones', icon: Smartphone, href: '/products?category=Smartphones' },
-  ];
-  
-  const plugin = React.useRef(
-    Autoplay({ delay: 3000, stopOnInteraction: true })
-  );
+const projects = [
+  {
+    name: 'E-Automate',
+    description: 'A fully functional e-commerce web application built with Next.js, Firebase, and Genkit for comprehensive automation testing and AI-powered features.',
+    tags: ['Next.js', 'TypeScript', 'Firebase', 'Tailwind CSS', 'Genkit'],
+    href: 'https://github.com/SafSaba/E-Automate',
+  },
+  {
+    name: 'ML Algorithm Classification',
+    description: 'A collection of hands-on classification projects demonstrating practical ML skills and concepts.',
+    tags: ['Python', 'Scikit-learn', 'Pandas', 'Matplotlib'],
+    href: 'https://github.com/SafSaba/ML-Algorithm-Classification',
+  },
+  {
+    name: 'Automation Framework',
+    description: 'This application was created to run automation scripts using Java and Playwright.',
+    tags: ['Java', 'Playwright', 'TestNG', 'Maven'],
+    href: 'https://github.com/SafSaba/Automation-Framework',
+  },
+];
 
+const skills = [
+    'Selenium WebDriver', 'REST Assured', 'Postman', 'Swagger', 'Playwright', 'TestNG', 'JUnit', 'Appium',
+    'Java', 'Python', 'TypeScript', 'SQL',
+    'Jenkins', 'Azure DevOps', 'Git', 'Docker',
+    'MySQL', 'Oracle', 'SQL Server', 'JDBC', 'Informatica PowerCenter',
+    'BDD (Cucumber, SpecFlow)', 'POM', 'Hybrid', 'DDT', 'TDD',
+    'Splunk', 'Grafana', 'Azure App Insights',
+    'Jira', 'ADO', 'Apache POI', 'JSON', 'Windows', 'Linux'
+];
+
+export default function AboutPage() {
   return (
-    <div className="flex flex-col">
-      <section className="bg-secondary/50 py-20 md:py-32">
-        <div className="container mx-auto grid md:grid-cols-2 gap-8 items-center px-4">
-          <div className="space-y-6 text-center md:text-left">
-            <h1 className="text-4xl md:text-6xl font-bold tracking-tight text-primary-foreground font-headline">
-              The Future of Automated E-Commerce Testing
-            </h1>
-            <p className="text-lg md:text-xl text-muted-foreground">
-              Welcome to E-Automate-SafSaba, your dedicated platform for robust and dynamic UI, API, and database testing. Explore our catalog and experience a seamless shopping flow.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
-              <Button asChild size="lg" className="font-semibold">
-                <Link href="/products">
-                  <ShoppingBag className="mr-2 h-5 w-5" />
-                  Shop Now
-                </Link>
-              </Button>
-              <Button asChild size="lg" variant="outline" className="font-semibold">
-                <Link href="#">
-                  Learn More
-                  <ArrowRight className="ml-2 h-5 w-5" />
-                </Link>
-              </Button>
-            </div>
-          </div>
-          <div className="relative h-64 md:h-96">
-            <Carousel
-                plugins={[plugin.current]}
-                className="w-full h-full"
-                onMouseEnter={plugin.current.stop}
-                onMouseLeave={plugin.current.reset}
-                >
-                <CarouselContent className="h-full">
-                    {carouselProducts.map((product) => (
-                    <CarouselItem key={product.id}>
-                        <Link href={`/products/${product.id}`}>
-                            <Card className="h-full overflow-hidden shadow-2xl">
-                                <CardContent className="p-0 relative aspect-video h-full">
-                                    <Image
-                                        src={product.images[0]}
-                                        alt={product.name}
-                                        data-ai-hint={product.dataAiHint}
-                                        fill
-                                        className="object-cover"
-                                        priority
-                                    />
-                                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"/>
-                                    <div className="absolute bottom-0 left-0 p-6">
-                                        <h3 className="text-2xl font-bold text-white">{product.name}</h3>
-                                        <p className="text-lg text-white/90 mt-2">${product.price.toFixed(2)}</p>
-                                    </div>
-                                </CardContent>
-                            </Card>
-                        </Link>
-                    </CarouselItem>
-                    ))}
-                </CarouselContent>
-                </Carousel>
-          </div>
-        </div>
-      </section>
-
-      <section className="py-16 md:py-24">
-        <div className="container mx-auto px-4">
-          <div className="text-center space-y-4 mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold font-headline">Featured Products</h2>
-            <p className="text-muted-foreground max-w-2xl mx-auto">
-              Check out some of our most popular items. Perfect for starting your test automation scenarios.
-            </p>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            {featuredProducts.map((product) => (
-              <ProductCard key={product.id} product={product} />
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="bg-secondary/50 py-16 md:py-24">
-        <div className="container mx-auto px-4">
-          <div className="text-center space-y-4 mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold font-headline">Shop by Category</h2>
-            <p className="text-muted-foreground max-w-2xl mx-auto">
-              Easily find what you're looking for by browsing our product categories.
-            </p>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-8">
-            {categories.map((category) => (
-              <Link href={category.href} key={category.name} className="group">
-                <div className="bg-card p-8 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 text-center flex flex-col items-center">
-                  <category.icon className="h-16 w-16 text-primary mb-4 transition-transform duration-300 group-hover:scale-110" />
-                  <h3 className="text-xl font-semibold">{category.name}</h3>
+    <div className="bg-secondary/50">
+      <div className="container mx-auto px-4 py-12 md:py-20">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          
+          <div className="lg:col-span-1">
+            <Card className="sticky top-20 text-center">
+              <CardContent className="p-6">
+                <Avatar className="w-32 h-32 mx-auto mb-4 border-4 border-primary/50">
+                  <AvatarImage src="/safwan-saba.png" alt="Safwan Saba" data-ai-hint="professional headshot" className="object-cover" />
+                  <AvatarFallback>SS</AvatarFallback>
+                </Avatar>
+                <h1 className="text-3xl font-bold font-headline">Safwan Saba</h1>
+                <p className="text-muted-foreground mt-1 text-sm">Senior Software Engineer in Test & Aspiring Machine Learning Engineer | Actively developing skills in Python, MLOps, Leveraging a Decade in Systems Architecture and Cloud</p>
+                
+                <div className="flex justify-center gap-4 mt-6">
+                   <Button asChild variant="outline" size="icon">
+                       <Link href="https://github.com/SafSaba" target="_blank"><Github className="h-5 w-5"/></Link>
+                   </Button>
+                   <Button asChild variant="outline" size="icon">
+                       <Link href="https://www.linkedin.com/in/safwansaba/" target="_blank"><Linkedin className="h-5 w-5"/></Link>
+                   </Button>
+                   <Button asChild variant="outline" size="icon">
+                       <Link href="mailto:isafwan@outlook.com"><Mail className="h-5 w-5"/></Link>
+                   </Button>
                 </div>
-              </Link>
-            ))}
+              </CardContent>
+            </Card>
+          </div>
+
+          <div className="lg:col-span-2 space-y-8">
+            <Card>
+              <CardHeader>
+                <CardTitle>About Me</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4 text-muted-foreground">
+                <p>
+                  My journey in technology began with a Bachelor's Degree in Software Engineering and Automated Systems, which provided a strong foundation for building and analyzing complex products. Early in my career, that foundation was put to the test when I discovered and reported a significant security flaw in iOS 5.0.1. That experience cemented my passion for ensuring system integrity from the deepest architectural levels.
+                </p>
+                <p>
+                  I've always been driven by the challenge of solving complex problems and a core passion for building intelligent, high-quality systems from the ground up. My decade-long career as a Software Quality Engineer (SDET) provided me with a unique vantage point—a deep, architectural understanding of how disparate components must integrate flawlessly to create a robust and reliable product. I learned to see the entire system, identify gaps others might miss, and ensure quality at every stage.
+                </p>
+                 <p>
+                  Now, I am channeling that same systems-thinking approach into the field of Machine Learning. I am actively deepening my expertise by studying for the AWS Certified AI - Foundation exam and building hands-on classification projects on GitHub "SafSaba'. This practical work is complemented by comprehensive training covering the full machine learning lifecycle—from advanced algorithms and Natural Language Processing (NLP) to MLOps principles and model deployment.
+                </p>
+                 <p>
+                  I am seeking a Machine Learning Engineer role where I can apply my unique blend of architectural insight, automation experience, and new ML capabilities. I am eager to contribute to a team that values a quality-first approach to building the next generation of AI solutions.
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>My Skills</CardTitle>
+              </CardHeader>
+              <CardContent className="flex flex-wrap gap-2">
+                {skills.map(skill => (
+                  <Badge key={skill} variant="secondary" className="text-sm">{skill}</Badge>
+                ))}
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>My Projects</CardTitle>
+                <CardDescription>Here are a few projects I'm proud of. You can find more on my GitHub.</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                {projects.map((project) => (
+                  <div key={project.name} className="flex flex-col sm:flex-row gap-6 p-4 border rounded-lg hover:bg-card">
+                    <div className="flex-grow">
+                      <h3 className="text-lg font-semibold">{project.name}</h3>
+                      <p className="text-muted-foreground mt-1 mb-3">{project.description}</p>
+                      <div className="flex flex-wrap gap-2">
+                          {project.tags.map(tag => (
+                            <Badge key={tag} variant="outline">{tag}</Badge>
+                          ))}
+                      </div>
+                    </div>
+                    <div className="flex-shrink-0">
+                       <Button asChild>
+                           <Link href={project.href} target="_blank">View on GitHub <Github className="ml-2 h-4 w-4"/></Link>
+                       </Button>
+                    </div>
+                  </div>
+                ))}
+              </CardContent>
+            </Card>
           </div>
         </div>
-      </section>
+      </div>
     </div>
   );
 }
