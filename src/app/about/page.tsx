@@ -42,7 +42,7 @@ export default function AboutPage() {
             <Card className="sticky top-20 text-center">
               <CardContent className="p-6">
                 <Avatar className="w-32 h-32 mx-auto mb-4 border-4 border-primary/50">
-                  <AvatarImage src="https://placehold.co/200x200.png" alt="Safwan Saba" data-ai-hint="professional headshot" />
+                  <AvatarImage src="https://placehold.co/200x200.png" alt="Safwan Saba" data-ai-hint="professional headshot" className="object-cover" />
                   <AvatarFallback>SS</AvatarFallback>
                 </Avatar>
                 <h1 className="text-3xl font-bold font-headline">Safwan Saba</h1>
