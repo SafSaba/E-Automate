@@ -15,10 +15,10 @@ const projects = [
     href: 'https://github.com/SafSaba/E-Automate-SafSaba',
   },
   {
-    name: 'Machine Learning Projects',
+    name: 'ML Algorithm Classification',
     description: 'A collection of hands-on classification projects demonstrating practical ML skills and concepts.',
     tags: ['Python', 'Scikit-learn', 'Pandas', 'Matplotlib'],
-    href: 'https://github.com/SafSaba',
+    href: 'https://github.com/SafSaba/ML-Algorithm-Classification',
   },
 ];
 
