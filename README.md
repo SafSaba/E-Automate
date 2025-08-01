@@ -1,16 +1,17 @@
-# E-Automate-SafSaba
+# Safwan Saba - Portfolio
 
-This is a Next.js application for an e-commerce platform called E-Automate-SafSaba. It uses Firebase for the backend and Genkit for AI-powered features.
+This is a Next.js application that serves as a personal portfolio and includes a sample e-commerce platform called E-Automate. It uses Firebase for the backend and Genkit for AI-powered features.
 
 ## Core Features:
 
-- User Authentication: Provide user authentication and role management to access different functionalities.
-- Product Catalog: Showcase products with detailed information including images, description, and pricing, fetched directly from Firestore.
-- Shopping Cart: Allow users to add, view, modify, and manage products in a shopping cart persisted across sessions.
-- Checkout & Payment: Guide users through a multi-step checkout process, integrating with Stripe for payment processing. Uses Firebase functions to orchestrate the requests with Stripe, for Visa, Paypal and Klarna.
-- Order History: Enable users to view past order details with order status.
-- AI Suggested Items: Suggest related products using the Gemini API based on product description using a tool, to determine which suggested items may be appropriate for the particular user.
-- Admin Functionality: Offer a simple admin panel to manage products for setting up test data.
+- **Portfolio Showcase**: A dedicated "About Me" section highlighting skills, experience, and projects.
+- **User Authentication**: Provides user authentication and role management to access different functionalities within the e-commerce section.
+- **Product Catalog**: Showcases products with detailed information including images, description, and pricing, fetched directly from Firestore.
+- **Shopping Cart**: Allows users to add, view, modify, and manage products in a shopping cart persisted across sessions.
+- **Checkout & Payment**: Guides users through a multi-step checkout process, integrating with Stripe for payment processing. Uses Firebase functions to orchestrate the requests with Stripe for various payment methods.
+- **Order History**: Enables users to view past order details with order status.
+- **AI Suggested Items**: Suggests related products using the Gemini API based on product descriptions.
+- **Admin Functionality**: Offers a simple admin panel to manage products for setting up test data.
 
 ## Getting Started
 
@@ -26,7 +27,7 @@ Then, run the development server:
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:9002](http://localhost:9002) with your browser to see the result.
 
 ## Project Structure
 
