@@ -10,8 +10,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { auth } from '@/lib/firebase';
-import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
+import { useAuth } from '@/hooks/use-auth';
 import { useToast } from '@/hooks/use-toast';
 
 
@@ -43,6 +42,7 @@ function GoogleIcon() {
 export default function SignupPage() {
   const router = useRouter();
   const { toast } = useToast();
+  const { register, signInWithGoogle, loading } = useAuth();
   const form = useForm<SignupFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -55,10 +55,7 @@ export default function SignupPage() {
 
   async function onSubmit(data: SignupFormValues) {
     try {
-      const userCredential = await createUserWithEmailAndPassword(auth, data.email, data.password);
-      await updateProfile(userCredential.user, {
-        displayName: `${data.firstName} ${data.lastName}`,
-      });
+      await register(data.email, data.password);
       toast({
         title: 'Account created!',
         description: 'You have been successfully signed up.',
@@ -138,12 +135,12 @@ export default function SignupPage() {
                   </FormItem>
                 )}
               />
-              <Button type="submit" className="w-full" data-testid="signup-button" disabled={form.formState.isSubmitting}>
-                {form.formState.isSubmitting ? 'Creating Account...' : 'Create an account'}
+              <Button type="submit" className="w-full" data-testid="signup-button" disabled={loading}>
+                {loading ? 'Creating Account...' : 'Create an account'}
               </Button>
-              <Button variant="outline" className="w-full" type="button">
+              <Button variant="outline" className="w-full" type="button" onClick={signInWithGoogle} disabled={loading}>
                   <GoogleIcon/>
-                  Sign up with Google
+                  {loading ? 'Signing up...' : 'Sign up with Google'}
               </Button>
             </form>
           </Form>

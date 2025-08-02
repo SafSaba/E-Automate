@@ -11,8 +11,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Label } from '@/components/ui/label';
-import { auth } from '@/lib/firebase';
-import { signInWithEmailAndPassword } from 'firebase/auth';
+import { useAuth } from '@/hooks/use-auth';
 import { useToast } from '@/hooks/use-toast';
 
 const formSchema = z.object({
@@ -37,6 +36,7 @@ function GoogleIcon() {
 export default function LoginPage() {
   const router = useRouter();
   const { toast } = useToast();
+  const { login, signInWithGoogle, loading } = useAuth();
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -47,7 +47,7 @@ export default function LoginPage() {
 
   async function onSubmit(data: LoginFormValues) {
     try {
-      await signInWithEmailAndPassword(auth, data.email, data.password);
+      await login(data.email, data.password);
       toast({
         title: 'Logged In',
         description: 'You have been successfully logged in.',
@@ -104,14 +104,14 @@ export default function LoginPage() {
                   </FormItem>
                 )}
               />
-              <Button type="submit" className="w-full" data-testid="login-button" disabled={form.formState.isSubmitting}>
-                {form.formState.isSubmitting ? 'Logging in...' : 'Login'}
+              <Button type="submit" className="w-full" data-testid="login-button" disabled={loading}>
+                {loading ? 'Logging in...' : 'Login'}
               </Button>
             </form>
           </Form>
-          <Button variant="outline" className="w-full mt-4">
+          <Button variant="outline" className="w-full mt-4" onClick={signInWithGoogle} disabled={loading}>
             <GoogleIcon/>
-            Login with Google
+            {loading ? 'Logging in...' : 'Login with Google'}
           </Button>
           <div className="mt-4 text-center text-sm">
             Don&apos;t have an account?{' '}

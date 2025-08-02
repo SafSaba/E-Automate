@@ -5,6 +5,7 @@ import React, { createContext, useState, useEffect, useCallback } from 'react';
 import { useToast } from "@/hooks/use-toast";
 
 interface CartContextType {
+  cart: CartItem[];
   cartItems: CartItem[];
   addToCart: (product: Product, quantity: number) => void;
   updateQuantity: (productId: string, quantity: number) => void;
@@ -88,6 +89,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   return (
     <CartContext.Provider
       value={{
+        cart: cartItems,
         cartItems,
         addToCart,
         updateQuantity,

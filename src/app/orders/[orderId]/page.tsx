@@ -14,7 +14,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { useAuth } from '@/hooks/use-auth';
 import { useRouter } from 'next/navigation';
 
-export default function OrderDetailsPage({ params }: { params: { orderId: string } }) {
+export default function OrderDetailsPage({ params }: any) {
   const { user, loading: authLoading } = useAuth();
   const router = useRouter();
   const [order, setOrder] = useState<Order | null>(null);
@@ -36,7 +36,7 @@ export default function OrderDetailsPage({ params }: { params: { orderId: string
           const orderData = orderSnap.data() as Order;
           // Ensure the order belongs to the current user
           if (orderData.userId === user.uid) {
-            setOrder({ id: orderSnap.id, ...orderData });
+            setOrder({ ...orderData, id: orderSnap.id });
           } else {
             // If the order does not belong to the user, redirect or show an error
             console.error("Access denied: Order does not belong to the current user.");
@@ -87,7 +87,7 @@ export default function OrderDetailsPage({ params }: { params: { orderId: string
     );
   }
 
-  const orderDate = order.createdAt ? new Date(order.createdAt.seconds * 1000).toLocaleDateString() : 'N/A';
+  const orderDate = order.createdAt ? new Date(order.createdAt * 1000).toLocaleDateString() : 'N/A';
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -128,15 +128,8 @@ export default function OrderDetailsPage({ params }: { params: { orderId: string
                     <h3 className="font-semibold mb-2">Shipping Address</h3>
                      <div className="text-sm text-muted-foreground">
                         <p>{order.shippingAddress.name}</p>
-                        <p>{order.shippingAddress.line1} {order.shippingAddress.line2}</p>
-                        <p>{order.shippingAddress.city}, {order.shippingAddress.state} {order.shippingAddress.postal_code}</p>
-                        <p>{order.shippingAddress.country}</p>
-                    </div>
-                </div>
-                 <div>
-                    <h3 className="font-semibold mb-2">Payment Method</h3>
-                    <div className="text-sm text-muted-foreground">
-                        <p>Card ending in {order.paymentDetails?.last4 || 'N/A'}</p>
+                        <p>{order.shippingAddress.address}</p>
+                        <p>{order.shippingAddress.city}, {order.shippingAddress.zip} {order.shippingAddress.country}</p>
                     </div>
                 </div>
             </div>
