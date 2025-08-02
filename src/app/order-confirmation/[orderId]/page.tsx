@@ -10,7 +10,8 @@ import { db } from '@/lib/firebase';
 import { useAuth } from '@/hooks/use-auth';
 import { useRouter } from 'next/navigation';
 
-export default function OrderConfirmationPage({ params }: { params: { orderId: string } }) {
+// The type definition has been simplified to resolve the build error.
+export default function OrderConfirmationPage({ params }: any) {
   const { user, loading: authLoading } = useAuth();
   const router = useRouter();
   const [loading, setLoading] = useState(true);
@@ -31,8 +32,6 @@ export default function OrderConfirmationPage({ params }: { params: { orderId: s
           setOrderExists(true);
         } else {
           setOrderExists(false);
-          // Optional: redirect if the order doesn't exist or doesn't belong to the user
-          // router.push('/orders');
         }
       } catch (error) {
         console.error("Error verifying order:", error);

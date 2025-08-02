@@ -9,72 +9,17 @@ import { Separator } from '@/components/ui/separator';
 import { useCart } from '@/hooks/use-cart';
 import { useAuth } from '@/hooks/use-auth';
 import { useRouter } from 'next/navigation';
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
-import { db } from '@/lib/firebase';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2 } from 'lucide-react';
 import { useCheckout } from '@/hooks/use-checkout';
 
 
 export default function SummaryPage() {
-  const { cart, cartTotal } = useCart();
-  const { shippingAddress, paymentDetails } = useCheckout();
+  const { cartItems, cartTotal } = useCart();
+  const { shippingAddress, paymentDetails, createOrder, loading } = useCheckout();
   const { user } = useAuth();
   const router = useRouter();
   const { toast } = useToast();
-  const [isProcessing, setIsProcessing] = useState(false);
-
-  const processOrder = async () => {
-    setIsProcessing(true);
-    if (!user || !shippingAddress) {
-      toast({
-        title: "Error",
-        description: "You must be logged in and have a shipping address to place an order.",
-        variant: "destructive",
-      });
-      setIsProcessing(false);
-      return;
-    }
-
-    try {
-      // 1. Create a new order object
-      const newOrder = {
-        userId: user.uid,
-        items: cart,
-        total: cartTotal,
-        shippingAddress,
-        paymentDetails: {
-          method: 'Card', // This could be dynamic in a real app
-          last4: paymentDetails?.last4 || '****'
-        },
-        status: 'Processing',
-        createdAt: serverTimestamp(),
-      };
-
-      // 2. Save the order to Firestore
-      const orderRef = await addDoc(collection(db, 'orders'), newOrder);
-
-      // 3. Clear the cart (implement this in your useCart hook)
-      // clearCart(); 
-
-      // 4. Redirect to order confirmation page
-      toast({
-        title: "Order Placed!",
-        description: "Your order has been successfully placed.",
-      });
-      router.push(`/order-confirmation/${orderRef.id}`);
-
-    } catch (error) {
-      console.error("Error placing order: ", error);
-      toast({
-        title: "Order Failed",
-        description: "There was an error placing your order. Please try again.",
-        variant: "destructive",
-      });
-      setIsProcessing(false);
-    }
-  };
-
 
   return (
     <div className="mx-auto max-w-4xl">
@@ -115,7 +60,7 @@ export default function SummaryPage() {
                 </CardHeader>
                 <CardContent>
                     <div className="space-y-4">
-                        {cart.map(({ product, quantity }) => (
+                        {cartItems.map(({ product, quantity }) => (
                             <div key={product.id} className="flex items-center gap-4">
                                 <Image src={product.images[0]} alt={product.name} width={64} height={64} className="rounded-md"/>
                                 <div className="flex-grow">
@@ -144,8 +89,8 @@ export default function SummaryPage() {
                     </div>
                 </CardContent>
                 <CardFooter>
-                    <Button onClick={processOrder} disabled={isProcessing} size="lg" className="w-full">
-                       {isProcessing ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : 'Place Order'}
+                    <Button onClick={createOrder} disabled={loading} size="lg" className="w-full">
+                       {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : 'Place Order'}
                     </Button>
                 </CardFooter>
             </Card>

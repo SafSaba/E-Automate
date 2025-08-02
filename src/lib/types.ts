@@ -1,3 +1,4 @@
+
 export interface Product {
   id: string;
   name: string;
@@ -5,8 +6,8 @@ export interface Product {
   price: number;
   images: string[];
   category: string;
-  stock: number;
   dataAiHint: string;
+  stock: number;
 }
 
 export interface CartItem {
@@ -19,14 +20,15 @@ export interface Order {
   userId: string;
   items: CartItem[];
   total: number;
-  status: 'Pending' | 'Processing' | 'Shipped' | 'Delivered' | 'Cancelled';
-  shippingAddress: {
-    name: string;
-    address: string;
-    city: string;
-    zip: string;
-    country: string;
-  };
-  paymentMethod: string;
-  createdAt: number; // timestamp
+  status: string;
+  createdAt: any;
+  shippingAddress: ShippingAddress;
+}
+
+export interface ShippingAddress {
+  name: string;
+  address: string;
+  city: string;
+  zip: string;
+  country: string;
 }
