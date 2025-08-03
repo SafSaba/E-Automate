@@ -18,6 +18,7 @@ export function Footer() {
               Products
             </Link>
             <Link href="/safwansaba" className="text-muted-foreground hover:text-foreground transition-colors">
+
               About Me
             </Link>
             <Link href="/contact" className="text-muted-foreground hover:text-foreground transition-colors">

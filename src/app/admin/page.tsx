@@ -15,6 +15,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 
 const ADMIN_EMAIL = 'isafwan@outlook.com';
 
+
 const AdminPage = () => {
   const { user, loading } = useAuth();
   const router = useRouter();

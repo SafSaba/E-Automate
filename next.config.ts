@@ -4,6 +4,7 @@ import type { NextConfig } from 'next';
 const ContentSecurityPolicy = `
   default-src 'self';
   script-src 'self' 'unsafe-inline' *.googletagmanager.com *.google.com *.google-analytics.com;
+
   child-src 'self' *.google.com;
   style-src 'self' 'unsafe-inline' *.googleapis.com;
   img-src 'self' data: *.google-analytics.com *.googletagmanager.com *.google.com *.gstatic.com placehold.co images.unsplash.com storage.googleapis.com safwansaba.dev;

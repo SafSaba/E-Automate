@@ -7,6 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useAuth } from '@/hooks/use-auth';
+
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -31,6 +32,7 @@ export default function ShippingPage() {
   const router = useRouter();
   const [shippingAddress, setShippingAddress] = useState<ShippingFormData | null>(null);
 
+
   const {
     register,
     handleSubmit,
@@ -50,6 +52,7 @@ export default function ShippingPage() {
     // In a real app, you'd save this to a backend or pass it securely.
     // For this test flow, we'll use localStorage.
     localStorage.setItem('shippingAddress', JSON.stringify(data));
+
     router.push('/checkout/payment');
   };
   

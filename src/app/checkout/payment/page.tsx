@@ -9,6 +9,7 @@ import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { CreditCard, Landmark } from 'lucide-react';
 import { useAuth } from '@/hooks/use-auth';
+
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -38,6 +39,7 @@ export default function PaymentPage() {
   const router = useRouter();
   const [paymentDetails, setPaymentDetails] = useState<PaymentFormData | null>(null);
 
+
   const {
     register,
     handleSubmit,
@@ -60,6 +62,7 @@ export default function PaymentPage() {
 
   const onSubmit = (data: PaymentFormData) => {
     localStorage.setItem('paymentDetails', JSON.stringify(data));
+
     router.push('/checkout/summary');
   };
   

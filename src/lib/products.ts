@@ -57,6 +57,7 @@ export const initialProducts: Product[] = [
       'Capture life in stunning detail with the Galaxy Pro. Its professional-grade camera system, brilliant dynamic display, and powerful processor make it a leader in its class. Features an intelligent S-Pen for ultimate productivity and creativity. 5G ready.',
     price: 1199.99,
     images: ['https://images.unsplash.com/photo-1601784551446-20c9e07cdbf1?q=80&w=600&auto=format&fit=crop', 'https://placehold.co/600x600.png'],
+
     category: 'Smartphones',
     stock: 30,
     dataAiHint: 'modern smartphone'
