@@ -6,10 +6,11 @@ import React, {
     useState,
     useEffect,
     ReactNode,
+    useMemo,
 
 } from 'react';
 import { getFirebaseAuth } from '@/lib/firebase';
-import type { User } from 'firebase/auth';
+import type { User, Auth } from 'firebase/auth';
 import {
     GoogleAuthProvider,
     signInWithPopup,
@@ -41,19 +42,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const [user, setUser] = useState<User | null>(null);
     const [loading, setLoading] = useState(true);
     const { toast } = useToast();
+    const auth = useMemo(() => getFirebaseAuth(), []);
 
     useEffect(() => {
-        const auth = getFirebaseAuth();
         const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
             setUser(firebaseUser);
             setLoading(false);
         });
         return () => unsubscribe();
-    }, []);
+    }, [auth]);
 
     const signInWithGoogle = async () => {
         setLoading(true);
-        const auth = getFirebaseAuth();
         const provider = new GoogleAuthProvider();
         try {
             await signInWithPopup(auth, provider);
@@ -72,7 +72,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     const login = async (email: string, pass: string) => {
         setLoading(true);
-        const auth = getFirebaseAuth();
         try {
             await signInWithEmailAndPassword(auth, email, pass);
         } catch (error: any) {
@@ -90,7 +89,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     const register = async (email: string, pass: string) => {
         setLoading(true);
-        const auth = getFirebaseAuth();
         try {
             await createUserWithEmailAndPassword(auth, email, pass);
         } catch (error: any) {
@@ -108,7 +106,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     const logout = async () => {
         setLoading(true);
-        const auth = getFirebaseAuth();
         try {
             await signOut(auth);
         } catch (error: any) {
@@ -125,7 +122,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     
     const sendPasswordReset = async (email: string) => {
         setLoading(true);
-        const auth = getFirebaseAuth();
         try {
             await sendPasswordResetEmail(auth, email);
             toast({

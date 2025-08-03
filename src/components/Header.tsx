@@ -22,6 +22,7 @@ import {
   Sheet,
   SheetContent,
   SheetTrigger,
+  SheetClose,
 } from '@/components/ui/sheet';
 import { Badge } from '@/components/ui/badge';
 import { useCart } from '@/hooks/use-cart';
@@ -67,7 +68,6 @@ export function Header() {
 
   const navLinks = [
     { href: '/safwansaba', label: 'About Me' },
-
     { href: '/products', label: 'E-Automate' },
     { href: '#projects', label: 'Project', action: handleScroll },
   ];
@@ -154,13 +154,17 @@ export function Header() {
             </SheetTrigger>
             <SheetContent side="right">
               <nav className="grid gap-6 text-lg font-medium mt-8">
-                 <Link href="/safwansaba" className="flex items-center gap-2 text-lg font-semibold">
-                    <Logo />
-                 </Link>
+                 <SheetClose asChild>
+                   <Link href="/safwansaba" className="flex items-center gap-2 text-lg font-semibold">
+                      <Logo />
+                   </Link>
+                 </SheetClose>
                  {navLinks.map(link => (
-                    <Link key={link.href} href={link.href} onClick={link.action} className="hover:text-foreground text-muted-foreground">
+                   <SheetClose asChild key={link.href}>
+                    <Link href={link.href} onClick={link.action} className="hover:text-foreground text-muted-foreground">
                         {link.label}
                     </Link>
+                   </SheetClose>
                  ))}
               </nav>
             </SheetContent>
