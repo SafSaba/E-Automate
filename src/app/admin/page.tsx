@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
-import { db } from '@/lib/firebase';
+import { getFirebaseDb } from '@/lib/firebase';
 import { collection, doc, setDoc } from 'firebase/firestore';
 import { initialProducts } from '@/lib/products';
 import { useAuth } from '@/hooks/use-auth';
@@ -59,6 +59,7 @@ const AdminPage = () => {
         description: "Please wait while we populate the database...",
     });
     try {
+        const db = getFirebaseDb();
         const productsCollection = collection(db, 'products');
         for (const product of initialProducts) {
             const productRef = doc(productsCollection, product.id);

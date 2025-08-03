@@ -27,7 +27,7 @@ import { Badge } from '@/components/ui/badge';
 import { useCart } from '@/hooks/use-cart';
 import { Logo } from './Logo';
 import { useAuth } from '@/hooks/use-auth';
-import { auth } from '@/lib/firebase';
+import { getFirebaseAuth } from '@/lib/firebase';
 import { signOut } from 'firebase/auth';
 import { useRouter } from 'next/navigation';
 import { useToast } from '@/hooks/use-toast';
@@ -40,7 +40,7 @@ export function Header() {
 
   const handleLogout = async () => {
     try {
-      await signOut(auth);
+      await signOut(getFirebaseAuth());
       toast({
         title: 'Logged Out',
         description: 'You have been successfully logged out.',

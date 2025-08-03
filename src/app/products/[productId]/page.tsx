@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -19,7 +20,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { SuggestedProducts } from '@/components/SuggestedProducts';
 import { CheckCircle, Shield, Truck, Loader2 } from 'lucide-react';
 import { doc, getDoc } from 'firebase/firestore';
-import { db } from '@/lib/firebase';
+import { getFirebaseDb } from '@/lib/firebase';
 import { Skeleton } from '@/components/ui/skeleton';
 
 export default function ProductDetailPage({ params }: any) {
@@ -32,6 +33,7 @@ export default function ProductDetailPage({ params }: any) {
     const fetchProduct = async () => {
       setLoading(true);
       try {
+        const db = getFirebaseDb();
         const productRef = doc(db, 'products', params.productId);
         const productSnap = await getDoc(productRef);
         if (productSnap.exists()) {

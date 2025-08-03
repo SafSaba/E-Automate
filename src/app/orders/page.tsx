@@ -7,7 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge, BadgeProps } from '@/components/ui/badge';
 import { collection, query, where, getDocs, orderBy } from 'firebase/firestore';
-import { db } from '@/lib/firebase';
+import { getFirebaseDb } from '@/lib/firebase';
 import { useAuth } from '@/hooks/use-auth';
 import type { Order } from '@/lib/types';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -29,6 +29,7 @@ export default function OrdersPage() {
     const fetchOrders = async () => {
       setLoading(true);
       try {
+        const db = getFirebaseDb();
         const q = query(
           collection(db, 'orders'),
           where('userId', '==', user.uid),

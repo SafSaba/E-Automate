@@ -8,7 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
 import { doc, getDoc } from 'firebase/firestore';
-import { db } from '@/lib/firebase';
+import { getFirebaseDb } from '@/lib/firebase';
 import { Order } from '@/lib/types';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useAuth } from '@/hooks/use-auth';
@@ -30,6 +30,7 @@ export default function OrderDetailsPage({ params }: any) {
     const fetchOrder = async () => {
       setLoading(true);
       try {
+        const db = getFirebaseDb();
         const orderRef = doc(db, 'orders', params.orderId);
         const orderSnap = await getDoc(orderRef);
         if (orderSnap.exists()) {

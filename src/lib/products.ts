@@ -1,6 +1,6 @@
 
 import type { Product } from './types';
-import { db } from './firebase';
+import { getFirebaseDb } from './firebase';
 import { collection, getDocs, doc, getDoc, query, where } from 'firebase/firestore';
 
 // This is a setup script to populate Firestore with initial data.
@@ -99,6 +99,7 @@ export const initialProducts: Product[] = [
 
 
 export async function getProducts(category?: string): Promise<Product[]> {
+  const db = getFirebaseDb();
   const productsCol = collection(db, 'products');
   let q;
   if (category) {
@@ -111,6 +112,7 @@ export async function getProducts(category?: string): Promise<Product[]> {
 }
 
 export async function getProductById(id: string): Promise<Product | undefined> {
+  const db = getFirebaseDb();
   const productRef = doc(db, 'products', id);
   const productSnap = await getDoc(productRef);
   if (productSnap.exists()) {
@@ -120,6 +122,7 @@ export async function getProductById(id: string): Promise<Product | undefined> {
 }
 
 export async function getCategories(): Promise<string[]> {
+    const db = getFirebaseDb();
     const productsSnapshot = await getDocs(collection(db, 'products'));
     const categories = new Set<string>();
     productsSnapshot.forEach(doc => {

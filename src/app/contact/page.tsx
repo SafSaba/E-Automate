@@ -14,7 +14,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Github, Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
-import { db } from '@/lib/firebase';
+import { getFirebaseDb } from '@/lib/firebase';
 
 const formSchema = z.object({
   email: z.string().email('Please enter a valid email address.'),
@@ -39,6 +39,7 @@ export default function ContactPage() {
 
   async function onSubmit(data: ContactFormValues) {
     setIsSubmitting(true);
+    const db = getFirebaseDb();
     try {
       await addDoc(collection(db, 'contact_messages'), {
         ...data,

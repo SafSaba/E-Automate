@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { CheckCircle, Loader2 } from 'lucide-react';
 import { doc, getDoc } from 'firebase/firestore';
-import { db } from '@/lib/firebase';
+import { getFirebaseDb } from '@/lib/firebase';
 import { useAuth } from '@/hooks/use-auth';
 import { useRouter } from 'next/navigation';
 
@@ -26,6 +26,7 @@ export default function OrderConfirmationPage({ params }: any) {
     
     const verifyOrder = async () => {
       try {
+        const db = getFirebaseDb();
         const orderRef = doc(db, 'orders', params.orderId);
         const orderSnap = await getDoc(orderRef);
         if (orderSnap.exists() && orderSnap.data().userId === user.uid) {
