@@ -67,6 +67,7 @@ export function Header() {
 
   const navLinks = [
     { href: '/safwansaba', label: 'About Me' },
+
     { href: '/products', label: 'E-Automate' },
     { href: '#projects', label: 'Project', action: handleScroll },
   ];

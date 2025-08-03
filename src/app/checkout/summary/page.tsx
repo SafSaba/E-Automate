@@ -2,6 +2,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+
+
 import Link from 'next/link';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
@@ -115,6 +117,7 @@ export default function SummaryPage() {
   }
 
 
+
   return (
     <div className="mx-auto max-w-4xl">
       <div className="grid grid-cols-1 md:grid-cols-5 gap-8">
@@ -155,6 +158,7 @@ export default function SummaryPage() {
                 <CardContent>
                     <div className="space-y-4">
                         {cartItems.map(({ product, quantity }: CartItem) => (
+
                             <div key={product.id} className="flex items-center gap-4">
                                 <Image src={product.images[0]} alt={product.name} width={64} height={64} className="rounded-md"/>
                                 <div className="flex-grow">
@@ -185,6 +189,7 @@ export default function SummaryPage() {
                 <CardFooter>
                     <Button onClick={processOrder} disabled={isProcessing} size="lg" className="w-full">
                        {isProcessing ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : 'Place Order'}
+
                     </Button>
                 </CardFooter>
             </Card>

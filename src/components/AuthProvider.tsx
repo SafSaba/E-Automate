@@ -6,6 +6,7 @@ import React, {
     useState,
     useEffect,
     ReactNode,
+
 } from 'react';
 import { auth } from '@/lib/firebase';
 import type { User } from 'firebase/auth';
@@ -16,6 +17,7 @@ import {
     createUserWithEmailAndPassword,
     signOut,
     sendPasswordResetEmail,
+
 } from 'firebase/auth';
 import { useToast } from '@/hooks/use-toast';
 
@@ -27,6 +29,7 @@ interface AuthContextType {
     register: (email: string, pass: string) => Promise<void>;
     logout: () => Promise<void>;
     sendPasswordReset: (email: string) => Promise<void>;
+
 }
 
 export const AuthContext = createContext<AuthContextType | undefined>(
@@ -58,6 +61,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                 variant: 'destructive',
             });
             throw error;
+
         } finally {
             setLoading(false);
         }
@@ -74,6 +78,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                 variant: 'destructive',
             });
             throw error;
+
         } finally {
             setLoading(false);
         }
@@ -90,6 +95,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                 variant: 'destructive',
             });
             throw error;
+
         } finally {
             setLoading(false);
         }
@@ -126,6 +132,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                 variant: 'destructive',
             });
             throw error;
+
         } finally {
             setLoading(false);
         }
@@ -139,6 +146,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         register,
         logout,
         sendPasswordReset,
+
     };
 
     return (

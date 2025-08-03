@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+
 import { useAuth } from '@/hooks/use-auth';
 import { useToast } from '@/hooks/use-toast';
 
@@ -72,6 +73,7 @@ export default function LoginPage() {
     }
   };
 
+
   return (
     <div className="flex items-center justify-center min-h-[calc(100vh-8rem)] bg-secondary/50 py-12 px-4">
       <Card className="mx-auto max-w-sm w-full">
@@ -103,6 +105,7 @@ export default function LoginPage() {
                     <div className="flex items-center">
                       <FormLabel>Password</FormLabel>
                       <Link href="/forgot-password" className="ml-auto inline-block text-sm underline">
+
                         Forgot your password?
                       </Link>
                     </div>
@@ -119,6 +122,7 @@ export default function LoginPage() {
             </form>
           </Form>
           <Button variant="outline" className="w-full mt-4" onClick={handleGoogleSignIn} disabled={loading}>
+
             <GoogleIcon/>
             {loading ? 'Logging in...' : 'Login with Google'}
           </Button>
