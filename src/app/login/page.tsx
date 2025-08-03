@@ -10,7 +10,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { Label } from '@/components/ui/label';
+
 import { useAuth } from '@/hooks/use-auth';
 import { useToast } from '@/hooks/use-toast';
 
@@ -55,13 +55,24 @@ export default function LoginPage() {
       router.push('/');
     } catch (error: any) {
       console.error('Login Error:', error);
-      toast({
-        title: 'Login Failed',
-        description: error.message || 'An unexpected error occurred.',
-        variant: 'destructive',
-      });
+      // The useAuth hook already shows a toast on error, so no need to repeat it here.
     }
   }
+
+  const handleGoogleSignIn = async () => {
+    try {
+      await signInWithGoogle();
+      toast({
+        title: 'Logged In',
+        description: 'You have been successfully logged in with Google.',
+      });
+      router.push('/');
+    } catch (error: any) {
+       console.error('Google Sign-In Error:', error);
+       // The useAuth hook already shows a toast on error
+    }
+  };
+
 
   return (
     <div className="flex items-center justify-center min-h-[calc(100vh-8rem)] bg-secondary/50 py-12 px-4">
@@ -93,7 +104,8 @@ export default function LoginPage() {
                   <FormItem>
                     <div className="flex items-center">
                       <FormLabel>Password</FormLabel>
-                      <Link href="#" className="ml-auto inline-block text-sm underline">
+                      <Link href="/forgot-password" className="ml-auto inline-block text-sm underline">
+
                         Forgot your password?
                       </Link>
                     </div>
@@ -109,7 +121,8 @@ export default function LoginPage() {
               </Button>
             </form>
           </Form>
-          <Button variant="outline" className="w-full mt-4" onClick={signInWithGoogle} disabled={loading}>
+          <Button variant="outline" className="w-full mt-4" onClick={handleGoogleSignIn} disabled={loading}>
+
             <GoogleIcon/>
             {loading ? 'Logging in...' : 'Login with Google'}
           </Button>

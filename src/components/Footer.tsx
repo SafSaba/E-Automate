@@ -1,3 +1,4 @@
+
 import Link from 'next/link';
 import { Logo } from './Logo';
 
@@ -16,10 +17,11 @@ export function Footer() {
             <Link href="/products" className="text-muted-foreground hover:text-foreground transition-colors">
               Products
             </Link>
-            <Link href="/about" className="text-muted-foreground hover:text-foreground transition-colors">
+            <Link href="/safwansaba" className="text-muted-foreground hover:text-foreground transition-colors">
+
               About Me
             </Link>
-            <Link href="#" className="text-muted-foreground hover:text-foreground transition-colors">
+            <Link href="/contact" className="text-muted-foreground hover:text-foreground transition-colors">
               Contact
             </Link>
             <Link href="#" className="text-muted-foreground hover:text-foreground transition-colors">

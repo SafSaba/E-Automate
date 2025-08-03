@@ -1,6 +1,6 @@
 'use client';
 
-import { Suspense } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { ProductCard } from '@/components/ProductCard';
 import { getProducts, getCategories } from '@/lib/products';
@@ -13,19 +13,40 @@ import {
 } from "@/components/ui/select";
 import { Button } from '@/components/ui/button';
 import { Skeleton } from "@/components/ui/skeleton";
+import type { Product } from '@/lib/types';
+import Link from 'next/link';
 
 function ProductsPageContent() {
   const searchParams = useSearchParams();
   const selectedCategory = searchParams.get('category');
-  const allProducts = getProducts();
-  const categories = getCategories();
-
-  const filteredProducts = selectedCategory
-    ? allProducts.filter((p) => p.category === selectedCategory)
-    : allProducts;
   
-  // TODO: Implement sorting logic
-  // const sortedProducts = filteredProducts;
+  const [products, setProducts] = useState<Product[]>([]);
+  const [categories, setCategories] = useState<string[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchProductsAndCategories = async () => {
+      setLoading(true);
+      try {
+        const [prods, cats] = await Promise.all([
+            getProducts(selectedCategory || undefined),
+            getCategories()
+        ]);
+        setProducts(prods);
+        setCategories(cats);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchProductsAndCategories();
+  }, [selectedCategory]);
+  
+
+  if (loading) {
+    return <ProductsSkeleton />;
+  }
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -57,7 +78,7 @@ function ProductsPageContent() {
                 asChild
                 className="justify-start"
             >
-                <a href="/products">All</a>
+                <Link href="/products">All</Link>
             </Button>
             {categories.map((category) => (
               <Button
@@ -66,18 +87,24 @@ function ProductsPageContent() {
                 asChild
                 className="justify-start"
               >
-                <a href={`/products?category=${category}`}>{category}</a>
+                <Link href={`/products?category=${encodeURIComponent(category)}`}>{category}</Link>
               </Button>
             ))}
           </div>
         </aside>
 
         <main className="col-span-12 md:col-span-9">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredProducts.map((product) => (
-              <ProductCard key={product.id} product={product} />
-            ))}
-          </div>
+          {products.length === 0 ? (
+             <div className="text-center py-16 border-2 border-dashed rounded-lg">
+                <p className="mt-2 text-muted-foreground">No products found in this category.</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {products.map((product) => (
+                <ProductCard key={product.id} product={product} />
+                ))}
+            </div>
+          )}
           {/* TODO: Add pagination */}
         </main>
       </div>

@@ -6,7 +6,7 @@ import React, {
     useState,
     useEffect,
     ReactNode,
-    useContext,
+
 } from 'react';
 import { auth } from '@/lib/firebase';
 import type { User } from 'firebase/auth';
@@ -16,8 +16,8 @@ import {
     signInWithEmailAndPassword,
     createUserWithEmailAndPassword,
     signOut,
-    fetchSignInMethodsForEmail,
-    linkWithCredential,
+    sendPasswordResetEmail,
+
 } from 'firebase/auth';
 import { useToast } from '@/hooks/use-toast';
 
@@ -28,6 +28,8 @@ interface AuthContextType {
     login: (email: string, pass: string) => Promise<void>;
     register: (email: string, pass: string) => Promise<void>;
     logout: () => Promise<void>;
+    sendPasswordReset: (email: string) => Promise<void>;
+
 }
 
 export const AuthContext = createContext<AuthContextType | undefined>(
@@ -53,22 +55,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         try {
             await signInWithPopup(auth, provider);
         } catch (error: any) {
-            if (
-                error.code === 'auth/account-exists-with-different-credential'
-            ) {
-                toast({
-                    title: 'Account exists',
-                    description:
-                        'An account with this email already exists. Please sign in with your original method to link your Google account.',
-                    variant: 'destructive',
-                });
-            } else {
-                toast({
-                    title: 'Error',
-                    description: error.message || 'An unknown error occurred.',
-                    variant: 'destructive',
-                });
-            }
+            toast({
+                title: 'Error',
+                description: error.message || 'An unknown error occurred.',
+                variant: 'destructive',
+            });
+            throw error;
+
         } finally {
             setLoading(false);
         }
@@ -84,6 +77,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                 description: error.message || 'An unexpected error occurred.',
                 variant: 'destructive',
             });
+            throw error;
+
         } finally {
             setLoading(false);
         }
@@ -99,6 +94,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                 description: error.message || 'An unexpected error occurred.',
                 variant: 'destructive',
             });
+            throw error;
+
         } finally {
             setLoading(false);
         }
@@ -114,6 +111,28 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                 description: error.message || 'An unexpected error occurred.',
                 variant: 'destructive',
             });
+            throw error;
+        } finally {
+            setLoading(false);
+        }
+    };
+    
+    const sendPasswordReset = async (email: string) => {
+        setLoading(true);
+        try {
+            await sendPasswordResetEmail(auth, email);
+            toast({
+                title: 'Password Reset Email Sent',
+                description: 'Check your inbox for a link to reset your password.',
+            });
+        } catch (error: any) {
+             toast({
+                title: 'Error',
+                description: error.message || 'Could not send password reset email.',
+                variant: 'destructive',
+            });
+            throw error;
+
         } finally {
             setLoading(false);
         }
@@ -126,6 +145,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         login,
         register,
         logout,
+        sendPasswordReset,
+
     };
 
     return (

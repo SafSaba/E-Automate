@@ -1,6 +1,9 @@
+
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+
+
 import Link from 'next/link';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
@@ -9,17 +12,111 @@ import { Separator } from '@/components/ui/separator';
 import { useCart } from '@/hooks/use-cart';
 import { useAuth } from '@/hooks/use-auth';
 import { useRouter } from 'next/navigation';
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { db } from '@/lib/firebase';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2 } from 'lucide-react';
-import { useCheckout } from '@/hooks/use-checkout';
+import { Skeleton } from '@/components/ui/skeleton';
+import { CartItem } from '@/lib/types';
 
 
 export default function SummaryPage() {
-  const { cartItems, cartTotal } = useCart();
-  const { shippingAddress, paymentDetails, createOrder, loading } = useCheckout();
-  const { user } = useAuth();
+  const { cartItems, cartTotal, clearCart } = useCart();
+  const { user, loading: authLoading } = useAuth();
   const router = useRouter();
   const { toast } = useToast();
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [isClient, setIsClient] = useState(false);
+  const [shippingAddress, setShippingAddress] = useState<any>(null);
+  const [paymentDetails, setPaymentDetails] = useState<any>(null);
+
+  useEffect(() => {
+    setIsClient(true);
+    const savedShippingAddress = localStorage.getItem('shippingAddress');
+    const savedPaymentDetails = localStorage.getItem('paymentDetails');
+    
+    if (savedShippingAddress) {
+      setShippingAddress(JSON.parse(savedShippingAddress));
+    }
+    if (savedPaymentDetails) {
+        const parsedDetails = JSON.parse(savedPaymentDetails);
+        setPaymentDetails({ ...parsedDetails, last4: parsedDetails.cardNumber.slice(-4) });
+    }
+
+    if (!authLoading && !user) {
+        router.push('/login');
+    }
+    if(!savedShippingAddress) {
+        router.push('/checkout');
+    }
+  }, [user, authLoading, router]);
+
+  const processOrder = async () => {
+    setIsProcessing(true);
+    if (!user || !shippingAddress) {
+      toast({
+        title: "Error",
+        description: "You must be logged in and have a shipping address to place an order.",
+        variant: "destructive",
+      });
+      setIsProcessing(false);
+      return;
+    }
+
+    try {
+      const newOrder = {
+        userId: user.uid,
+        items: cartItems,
+        total: cartTotal,
+        shippingAddress,
+        paymentDetails: {
+          method: 'Card',
+          last4: paymentDetails?.last4 || '****'
+        },
+        status: 'Processing',
+        createdAt: serverTimestamp(),
+      };
+
+      const orderRef = await addDoc(collection(db, 'orders'), newOrder);
+
+      clearCart(); 
+      localStorage.removeItem('shippingAddress');
+      localStorage.removeItem('paymentDetails');
+
+      toast({
+        title: "Order Placed!",
+        description: "Your order has been successfully placed.",
+      });
+      router.push(`/order-confirmation/${orderRef.id}`);
+
+    } catch (error) {
+      console.error("Error placing order: ", error);
+      toast({
+        title: "Order Failed",
+        description: "There was an error placing your order. Please try again.",
+        variant: "destructive",
+      });
+      setIsProcessing(false);
+    }
+  };
+
+  if(!isClient || authLoading || !shippingAddress) {
+      return (
+         <div className="mx-auto max-w-4xl">
+            <div className="grid grid-cols-1 md:grid-cols-5 gap-8">
+                <div className="md:col-span-3 space-y-8">
+                    <Skeleton className="h-40 w-full" />
+                    <Skeleton className="h-40 w-full" />
+                </div>
+                <div className="md:col-span-2">
+                    <Skeleton className="h-80 w-full" />
+                </div>
+            </div>
+         </div>
+      )
+  }
+
+
 
   return (
     <div className="mx-auto max-w-4xl">
@@ -60,7 +157,8 @@ export default function SummaryPage() {
                 </CardHeader>
                 <CardContent>
                     <div className="space-y-4">
-                        {cartItems.map(({ product, quantity }) => (
+                        {cartItems.map(({ product, quantity }: CartItem) => (
+
                             <div key={product.id} className="flex items-center gap-4">
                                 <Image src={product.images[0]} alt={product.name} width={64} height={64} className="rounded-md"/>
                                 <div className="flex-grow">
@@ -89,8 +187,9 @@ export default function SummaryPage() {
                     </div>
                 </CardContent>
                 <CardFooter>
-                    <Button onClick={createOrder} disabled={loading} size="lg" className="w-full">
-                       {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : 'Place Order'}
+                    <Button onClick={processOrder} disabled={isProcessing} size="lg" className="w-full">
+                       {isProcessing ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : 'Place Order'}
+
                     </Button>
                 </CardFooter>
             </Card>

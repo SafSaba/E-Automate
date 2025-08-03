@@ -1,3 +1,4 @@
+
 'use client';
 
 import Link from 'next/link';
@@ -6,7 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useAuth } from '@/hooks/use-auth';
-import { useCheckout } from '@/hooks/use-checkout';
+
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -28,8 +29,9 @@ type ShippingFormData = z.infer<typeof shippingSchema>;
 
 export default function ShippingPage() {
   const { user, loading: authLoading } = useAuth();
-  const { shippingAddress, setShippingAddress } = useCheckout();
   const router = useRouter();
+  const [shippingAddress, setShippingAddress] = useState<ShippingFormData | null>(null);
+
 
   const {
     register,
@@ -47,7 +49,10 @@ export default function ShippingPage() {
   }, [user, authLoading, router]);
   
   const onSubmit = (data: ShippingFormData) => {
-    setShippingAddress(data);
+    // In a real app, you'd save this to a backend or pass it securely.
+    // For this test flow, we'll use localStorage.
+    localStorage.setItem('shippingAddress', JSON.stringify(data));
+
     router.push('/checkout/payment');
   };
   

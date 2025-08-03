@@ -1,3 +1,4 @@
+
 'use client';
 
 import Link from 'next/link';
@@ -8,7 +9,7 @@ import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { CreditCard, Landmark } from 'lucide-react';
 import { useAuth } from '@/hooks/use-auth';
-import { useCheckout } from '@/hooks/use-checkout';
+
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -35,8 +36,9 @@ type PaymentFormData = z.infer<typeof paymentSchema>;
 
 export default function PaymentPage() {
   const { user, loading: authLoading } = useAuth();
-  const { paymentDetails, setPaymentDetails } = useCheckout();
   const router = useRouter();
+  const [paymentDetails, setPaymentDetails] = useState<PaymentFormData | null>(null);
+
 
   const {
     register,
@@ -59,7 +61,8 @@ export default function PaymentPage() {
   }, [user, authLoading, router]);
 
   const onSubmit = (data: PaymentFormData) => {
-    setPaymentDetails({ ...data, last4: data.cardNumber.slice(-4) });
+    localStorage.setItem('paymentDetails', JSON.stringify(data));
+
     router.push('/checkout/summary');
   };
   

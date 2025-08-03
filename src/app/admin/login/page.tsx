@@ -1,54 +1,85 @@
+
 'use client';
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useAuth } from '@/hooks/use-auth';
+import { useToast } from '@/hooks/use-toast';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+
+const ADMIN_EMAIL = 'isafwan@outlook.com';
+
 
 const AdminLoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const router = useRouter();
+  const { login, loading } = useAuth();
+  const { toast } = useToast();
 
-  const handleLogin = async () => {
-    // TODO: Implement actual Firebase Authentication login logic here
-    console.log('Attempting to log in with:', { email, password });
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (email !== ADMIN_EMAIL) {
+      toast({
+        title: 'Access Denied',
+        description: 'This email is not authorized for admin access.',
+        variant: 'destructive',
+      });
+      return;
+    }
 
-    // After successful login, redirect to the admin dashboard
-    // router.push('/admin');
+    try {
+      await login(email, password);
+      // The auth state change will trigger the redirect in the admin page
+      router.push('/admin');
+    } catch (error: any) {
+      // The useAuth hook already shows a toast on error
+    }
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center">
-      <div className="w-full max-w-md">
-        <h1 className="text-2xl font-bold text-center mb-6">Admin Login</h1>
-        <div className="space-y-4">
-          <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
-            <input
-              type="email"
-              id="email"
-              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-          </div>
-          <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700">Password</label>
-            <input
-              type="password"
-              id="password"
-              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-          </div>
-          <button
-            onClick={handleLogin}
-            className="w-full px-4 py-2 bg-blue-600 text-white font-semibold rounded-md shadow hover:bg-blue-700"
-          >
-            Login
-          </button>
-        </div>
-      </div>
+    <div className="flex min-h-screen items-center justify-center bg-secondary/50">
+      <Card className="w-full max-w-md">
+        <CardHeader className="text-center">
+          <CardTitle className="text-2xl font-bold">Admin Login</CardTitle>
+          <CardDescription>Enter your admin credentials to access the dashboard.</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleLogin} className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="email">Email</Label>
+              <Input
+                type="email"
+                id="email"
+                placeholder="admin@example.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="password">Password</Label>
+              <Input
+                type="password"
+                id="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+            </div>
+            <Button
+              type="submit"
+              className="w-full"
+              disabled={loading}
+            >
+              {loading ? 'Logging in...' : 'Login'}
+            </Button>
+          </form>
+        </CardContent>
+      </Card>
     </div>
   );
 };

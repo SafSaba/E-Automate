@@ -1,6 +1,11 @@
-import type { Product } from './types';
 
-const products: Product[] = [
+import type { Product } from './types';
+import { db } from './firebase';
+import { collection, getDocs, doc, getDoc, query, where } from 'firebase/firestore';
+
+// This is a setup script to populate Firestore with initial data.
+// You can run this from an admin page or a setup script.
+export const initialProducts: Product[] = [
   {
     id: 'prod_001',
     name: 'Chronograph Excellence',
@@ -51,7 +56,8 @@ const products: Product[] = [
     description:
       'Capture life in stunning detail with the Galaxy Pro. Its professional-grade camera system, brilliant dynamic display, and powerful processor make it a leader in its class. Features an intelligent S-Pen for ultimate productivity and creativity. 5G ready.',
     price: 1199.99,
-    images: ['https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?q=80&w=600&auto=format&fit=crop', 'https://placehold.co/600x600.png'],
+    images: ['https://images.unsplash.com/photo-1601784551446-20c9e07cdbf1?q=80&w=600&auto=format&fit=crop', 'https://placehold.co/600x600.png'],
+
     category: 'Smartphones',
     stock: 30,
     dataAiHint: 'modern smartphone'
@@ -91,17 +97,36 @@ const products: Product[] = [
   },
 ];
 
-export function getProducts(category?: string): Product[] {
+
+export async function getProducts(category?: string): Promise<Product[]> {
+  const productsCol = collection(db, 'products');
+  let q;
   if (category) {
-    return products.filter((product) => product.category === category);
+    q = query(productsCol, where('category', '==', category));
+  } else {
+    q = query(productsCol);
   }
-  return products;
+  const productsSnapshot = await getDocs(q);
+  return productsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Product));
 }
 
-export function getProductById(id: string): Product | undefined {
-  return products.find((product) => product.id === id);
+export async function getProductById(id: string): Promise<Product | undefined> {
+  const productRef = doc(db, 'products', id);
+  const productSnap = await getDoc(productRef);
+  if (productSnap.exists()) {
+    return { id: productSnap.id, ...productSnap.data() } as Product;
+  }
+  return undefined;
 }
 
-export function getCategories(): string[] {
-  return [...new Set(products.map((p) => p.category))];
+export async function getCategories(): Promise<string[]> {
+    const productsSnapshot = await getDocs(collection(db, 'products'));
+    const categories = new Set<string>();
+    productsSnapshot.forEach(doc => {
+        const product = doc.data() as Product;
+        if (product.category) {
+            categories.add(product.category);
+        }
+    });
+    return Array.from(categories);
 }
