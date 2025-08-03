@@ -5,3 +5,9 @@ runConfig:
   # Increase this value if you'd like to automatically spin up
   # more instances in response to increased traffic.
   maxInstances: 1
+  # To make a secret available as an environment variable, you must first create
+  # the secret in Secret Manager.
+  # https://firebase.google.com/docs/app-hosting/configure#access-secrets
+  env:
+    - variable: GOOGLE_API_KEY
+      secret: GOOGLE_API_KEY
